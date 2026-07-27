@@ -37,8 +37,13 @@
                         </a>
                     </li>
                     <li class="nav-item px-lg-2">
+                        <a class="nav-link" href="#" id="navVocabList">
+                            <i class="bi bi-journal-bookmark-fill text-info"></i> Vocab Library
+                        </a>
+                    </li>
+                    <li class="nav-item px-lg-2">
                         <a class="nav-link text-success fw-semibold" href="#" data-bs-toggle="modal" data-bs-target="#importLanguageModal">
-                            <i class="bi bi-file-earmark-arrow-up-fill"></i> Import to Library
+                            <i class="bi bi-file-earmark-arrow-up-fill"></i> Import to library
                         </a>
                     </li>
                 </ul>
@@ -62,6 +67,22 @@
                             <p class="m-0">ประวัติการเล่นจะแสดงที่นี่หลังจากคุณเล่นเกมจบครับ</p>
                         </div>
                     </div>
+                </div>
+
+                <div id="vocabListSection" class="d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+                        <h3 class="fw-bold m-0"><i class="bi bi-journal-bookmark-fill text-info"></i> Vocab Library</h3>
+                    </div>
+                    <p class="text-muted small">เลือกหมวดหมู่ภาษาเพื่ออ่านและทบทวนคำศัพท์ทั้งหมด</p>
+
+                    <div class="d-flex flex-wrap gap-2 mb-4" id="vocabFilterButtons">
+                        <button class="btn btn-dark btn-sm rounded-pill px-3 fw-bold filter-btn active" onclick="filterVocabLanguage('all', this)">ทั้งหมด</button>
+                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold filter-btn" onclick="filterVocabLanguage('chinese', this)">🇨🇳 ภาษาจีน</button>
+                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold filter-btn" onclick="filterVocabLanguage('english', this)">🇺🇸 ภาษาอังกฤษ</button>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold filter-btn" onclick="filterVocabLanguage('vietnamese', this)">🇻🇳 ภาษาเวียดนาม</button>
+                    </div>
+
+                    <div id="allVocabContainer" class="d-flex flex-column gap-3"></div>
                 </div>
 
                 <div id="createChineseSection" class="d-none">
@@ -422,15 +443,9 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                 </div>
                 <div class="modal-body p-4">
                     <div class="d-grid gap-3">
-                        <button class="btn btn-outline-danger btn-lg rounded-pill fw-bold" onclick="openImportSection('chinese')" data-bs-dismiss="modal">
-                            🇨🇳 ภาษาจีน (Chinese)
-                        </button>
-                        <button class="btn btn-outline-primary btn-lg rounded-pill fw-bold" onclick="openImportSection('english')" data-bs-dismiss="modal">
-                            🇺🇸 ภาษาอังกฤษ (English)
-                        </button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="openImportSection('vietnamese')" data-bs-dismiss="modal">
-                            🇻🇳 ภาษาเวียดนาม (Vietnamese)
-                        </button>
+                        <button class="btn btn-outline-danger btn-lg rounded-pill fw-bold" onclick="openImportSection('chinese')" data-bs-dismiss="modal">🇨🇳 ภาษาจีน (Chinese)</button>
+                        <button class="btn btn-outline-primary btn-lg rounded-pill fw-bold" onclick="openImportSection('english')" data-bs-dismiss="modal">🇺🇸 ภาษาอังกฤษ (English)</button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="openImportSection('vietnamese')" data-bs-dismiss="modal">🇻🇳 ภาษาเวียดนาม (Vietnamese)</button>
                     </div>
                 </div>
             </div>
@@ -446,15 +461,9 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                 </div>
                 <div class="modal-body p-4">
                     <div class="d-grid gap-3">
-                        <button class="btn btn-primary btn-lg rounded-pill fw-bold" onclick="initQuizGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-question-square"></i> โหมดตอบคำถาม (Choices)
-                        </button>
-                        <button class="btn btn-success btn-lg rounded-pill fw-bold" onclick="initMatchGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-grid-3x3-gap"></i> โหมดจับคู่ (Matching Grid)
-                        </button>
-                        <button class="btn btn-warning btn-lg rounded-pill fw-bold text-dark" onclick="initScrambleGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-shuffle"></i> เกมเรียงประโยค (Word Scramble)
-                        </button>
+                        <button class="btn btn-primary btn-lg rounded-pill fw-bold" onclick="initQuizGame()" data-bs-dismiss="modal"><i class="bi bi-question-square"></i> โหมดตอบคำถาม (Choices)</button>
+                        <button class="btn btn-success btn-lg rounded-pill fw-bold" onclick="initMatchGame()" data-bs-dismiss="modal"><i class="bi bi-grid-3x3-gap"></i> โหมดจับคู่ (Matching Grid)</button>
+                        <button class="btn btn-warning btn-lg rounded-pill fw-bold text-dark" onclick="initScrambleGame()" data-bs-dismiss="modal"><i class="bi bi-shuffle"></i> เกมเรียงประโยค (Word Scramble)</button>
                     </div>
                 </div>
             </div>
@@ -478,19 +487,13 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
                     <p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p>
-                    
                     <div class="bg-body-secondary rounded-4 p-3 mb-4">
                         <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
                         <h1 class="display-4 fw-bold text-primary m-0" id="finalScoreText">0 / 0</h1>
                     </div>
-
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" onclick="restartQuizGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง
-                        </button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">
-                            กลับสู่ Library
-                        </button>
+                        <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" onclick="restartQuizGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
                     </div>
                 </div>
             </div>
@@ -504,19 +507,13 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
                     <p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p>
-                    
                     <div class="bg-body-secondary rounded-4 p-3 mb-4">
                         <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
                         <h1 class="display-4 fw-bold text-primary m-0" id="finalMatchScoreText">0 / 0</h1>
                     </div>
-
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" onclick="initMatchGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง
-                        </button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">
-                            กลับสู่ Library
-                        </button>
+                        <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" onclick="initMatchGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
                     </div>
                 </div>
             </div>
@@ -530,19 +527,13 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">สุดยอดไปเลย!</h2>
                     <p class="text-muted mb-4">คุณเรียงคำศัพท์ครบทุกข้อแล้ว</p>
-                    
                     <div class="bg-body-secondary rounded-4 p-3 mb-4">
                         <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
                         <h1 class="display-4 fw-bold text-warning m-0" id="finalScrambleScoreText">0 / 0</h1>
                     </div>
-
                     <div class="d-grid gap-2">
-                        <button class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-dark" onclick="initScrambleGame()" data-bs-dismiss="modal">
-                            <i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง
-                        </button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">
-                            กลับสู่ Library
-                        </button>
+                        <button class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-dark" onclick="initScrambleGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
                     </div>
                 </div>
             </div>
@@ -551,5 +542,23 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            const menuToggle = document.getElementById('navbarNav');
+            
+            if (menuToggle) {
+                const bsCollapse = new bootstrap.Collapse(menuToggle, {toggle: false});
+                navLinks.forEach((l) => {
+                    l.addEventListener('click', () => {
+                        if (window.innerWidth < 992) { // ทำงานเฉพาะหน้าจอมือถือ/แท็บเล็ต
+                            bsCollapse.hide();
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
