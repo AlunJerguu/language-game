@@ -40,7 +40,14 @@ let currentEditingSetId = null;
 let currentLanguage = '';
 let tempWords = [];
 let activeGameSet = null;
-let currentVocabFilter = 'all'; // ตัวแปรเก็บค่าภาษาที่เลือกกรอง
+
+// ตัวแปรกรองสำหรับหน้า Library
+let currentLibraryFilter = 'all';
+let currentLibraryTopic = 'all';
+
+// ตัวแปรกรองสำหรับหน้า Vocab Library
+let currentVocabFilter = 'all';
+let currentVocabTopic = 'all';
 
 let quizQuestions = [];
 let quizCurrentIndex = 0;
@@ -56,6 +63,18 @@ let scrambleCurrentIndex = 0;
 let scrambleScore = 0;
 let currentScrambleLetters = [];
 let userSelectedLetters = [];
+
+let speedQuestions = [];
+let speedCurrentIndex = 0;
+let speedScore = 0;
+let speedTimer = null;
+let timeLeft = 5;
+const maxTimePerQuestion = 5;
+
+// ⏱️ ตัวแปรควบคุมเวลา 30 วินาที
+let globalTimer = null;
+let globalTimeLeft = 30;
+const totalGameTime = 30;
 
 // Web Audio API เสียงเอฟเฟกต์
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -158,6 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navHome').addEventListener('click', (e) => {
         e.preventDefault();
         playSound('click');
+        stopGlobalTimer();
+        stopSpeedTimer();
         showSection('homeSection');
         renderHomeHistory();
     });
@@ -165,7 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navLibrary').addEventListener('click', (e) => {
         e.preventDefault();
         playSound('click');
+        stopGlobalTimer();
+        stopSpeedTimer();
         showSection('librarySection');
+        currentLibraryFilter = 'all';
+        currentLibraryTopic = 'all';
+        document.getElementById('libraryLangDropdownBtn').innerHTML = `<span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>`;
+        document.getElementById('libraryTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-warning"></i> เลือกหัวข้อทั้งหมด</span>`;
+        renderLibraryTopicDropdown();
         renderLibrary();
     });
 
@@ -174,17 +202,23 @@ document.addEventListener('DOMContentLoaded', () => {
         navVocabList.addEventListener('click', (e) => {
             e.preventDefault();
             playSound('click');
+            stopGlobalTimer();
+            stopSpeedTimer();
             showSection('vocabListSection');
             currentVocabFilter = 'all';
-            // รีเซ็ตปุ่มตัวกรองกลับมาที่ "ทั้งหมด"
-            const allBtn = document.querySelector('#vocabFilterButtons button:first-child');
-            if (allBtn) filterVocabLanguage('all', allBtn);
+            currentVocabTopic = 'all';
+            document.getElementById('vocabLangDropdownBtn').innerHTML = `<span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>`;
+            document.getElementById('vocabTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-info"></i> เลือกหัวข้อทั้งหมด</span>`;
+            renderVocabTopicDropdown();
+            renderAllVocabLibrary();
         });
     }
 
     document.getElementById('navLogo').addEventListener('click', (e) => {
         e.preventDefault();
         playSound('click');
+        stopGlobalTimer();
+        stopSpeedTimer();
         showSection('homeSection');
         renderHomeHistory();
     });
@@ -251,37 +285,216 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ฟังก์ชันกรองภาษาใน Vocab Library
-function filterVocabLanguage(lang, btnElement) {
-    playSound('click');
-    currentVocabFilter = lang;
+// ⏱️ ระบบจับเวลาภาพรวม 30 วินาที
+function startGlobalTimer(callbackWhenTimesUp, progressBarId) {
+    stopGlobalTimer();
+    globalTimeLeft = totalGameTime;
+    updateGlobalProgressBar(progressBarId);
 
-    // จัดการสไตล์ปุ่มทั้งหมดในแถวตัวกรอง
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active', 'btn-dark', 'btn-danger', 'btn-primary', 'btn-secondary');
-        if (btn.innerText.includes('ทั้งหมด')) btn.className = 'btn btn-outline-dark btn-sm rounded-pill px-3 fw-bold filter-btn';
-        if (btn.innerText.includes('จีน')) btn.className = 'btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold filter-btn';
-        if (btn.innerText.includes('อังกฤษ')) btn.className = 'btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold filter-btn';
-        if (btn.innerText.includes('เวียดนาม')) btn.className = 'btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold filter-btn';
+    globalTimer = setInterval(() => {
+        globalTimeLeft -= 0.1;
+        updateGlobalProgressBar(progressBarId);
+
+        if (globalTimeLeft <= 0) {
+            stopGlobalTimer();
+            playSound('wrong');
+            if (callbackWhenTimesUp) callbackWhenTimesUp();
+        }
+    }, 100);
+}
+
+function stopGlobalTimer() {
+    if (globalTimer) {
+        clearInterval(globalTimer);
+        globalTimer = null;
+    }
+}
+
+function updateGlobalProgressBar(barId) {
+    const bar = document.getElementById(barId);
+    if (!bar) return;
+    let percentage = (globalTimeLeft / totalGameTime) * 100;
+    bar.style.width = `${percentage}%`;
+
+    if (percentage > 50) {
+        bar.className = "progress-bar bg-primary progress-bar-striped progress-bar-animated";
+    } else if (percentage > 25) {
+        bar.className = "progress-bar bg-warning progress-bar-striped progress-bar-animated";
+    } else {
+        bar.className = "progress-bar bg-danger progress-bar-striped progress-bar-animated";
+    }
+}
+
+// 🔽 ฟังก์ชันกรองหน้า Library
+function filterLibraryLanguage(lang, langTitle, itemElement) {
+    playSound('click');
+    currentLibraryFilter = lang;
+    currentLibraryTopic = 'all';
+
+    document.getElementById('libraryLangDropdownBtn').innerHTML = `<span><i class="bi bi-translate text-primary"></i> ${langTitle}</span>`;
+    document.getElementById('libraryTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-warning"></i> เลือกหัวข้อทั้งหมด</span>`;
+
+    document.querySelectorAll('#libraryLangDropdownList .dropdown-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    itemElement.classList.add('active');
+
+    renderLibraryTopicDropdown();
+    renderLibrary();
+}
+
+function filterLibraryTopic(topicId, topicTitle, itemElement) {
+    playSound('click');
+    currentLibraryTopic = topicId;
+
+    document.getElementById('libraryTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-warning"></i> ${topicTitle}</span>`;
+
+    document.querySelectorAll('#libraryTopicDropdownList .dropdown-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    itemElement.classList.add('active');
+
+    renderLibrary();
+}
+
+function renderLibraryTopicDropdown() {
+    const dropdownList = document.getElementById('libraryTopicDropdownList');
+    if (!dropdownList) return;
+
+    let filteredSets = gameSets;
+    if (currentLibraryFilter !== 'all') {
+        filteredSets = gameSets.filter(set => set.language === currentLibraryFilter);
+    }
+
+    let html = `<li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold ${currentLibraryTopic === 'all' ? 'active' : ''}" href="#" onclick="filterLibraryTopic('all', 'เลือกหัวข้อทั้งหมด', this)">เลือกหัวข้อทั้งหมด</a></li>`;
+
+    filteredSets.forEach(set => {
+        let activeClass = (currentLibraryTopic === set.id) ? 'active' : '';
+        html += `<li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold ${activeClass}" href="#" onclick="filterLibraryTopic(${set.id}, '${set.title}', this)">${set.title}</a></li>`;
     });
 
-    // กำหนดสีปุ่มที่กำลังถูกกดเลือก
-    if (lang === 'all') btnElement.className = 'btn btn-dark btn-sm rounded-pill px-3 fw-bold filter-btn active';
-    else if (lang === 'chinese') btnElement.className = 'btn btn-danger btn-sm rounded-pill px-3 fw-bold filter-btn active';
-    else if (lang === 'english') btnElement.className = 'btn btn-primary btn-sm rounded-pill px-3 fw-bold filter-btn active';
-    else if (lang === 'vietnamese') btnElement.className = 'btn btn-secondary btn-sm rounded-pill px-3 fw-bold filter-btn active';
+    dropdownList.innerHTML = html;
+}
+
+// 🔽 ฟังก์ชันกรองหน้า Vocab Library
+function filterVocabLanguage(lang, langTitle, itemElement) {
+    playSound('click');
+    currentVocabFilter = lang;
+    currentVocabTopic = 'all';
+
+    document.getElementById('vocabLangDropdownBtn').innerHTML = `<span><i class="bi bi-translate text-primary"></i> ${langTitle}</span>`;
+    document.getElementById('vocabTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-info"></i> เลือกหัวข้อทั้งหมด</span>`;
+
+    document.querySelectorAll('#vocabLangDropdownList .dropdown-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    itemElement.classList.add('active');
+
+    renderVocabTopicDropdown();
+    renderAllVocabLibrary();
+}
+
+function filterVocabTopic(topicId, topicTitle, itemElement) {
+    playSound('click');
+    currentVocabTopic = topicId;
+
+    document.getElementById('vocabTopicDropdownBtn').innerHTML = `<span><i class="bi bi-filter-left text-info"></i> ${topicTitle}</span>`;
+
+    document.querySelectorAll('#vocabTopicDropdownList .dropdown-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    itemElement.classList.add('active');
 
     renderAllVocabLibrary();
 }
 
-// ฟังก์ชันเรนเดอร์คำศัพท์ใน Vocab Library ตามภาษาที่กรอง
-function renderAllVocabLibrary() {
-    const container = document.getElementById('allVocabContainer');
-    if (!container) return;
+function renderVocabTopicDropdown() {
+    const dropdownList = document.getElementById('vocabTopicDropdownList');
+    if (!dropdownList) return;
 
     let filteredSets = gameSets;
     if (currentVocabFilter !== 'all') {
         filteredSets = gameSets.filter(set => set.language === currentVocabFilter);
+    }
+
+    let html = `<li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold ${currentVocabTopic === 'all' ? 'active' : ''}" href="#" onclick="filterVocabTopic('all', 'เลือกหัวข้อทั้งหมด', this)">เลือกหัวข้อทั้งหมด</a></li>`;
+
+    filteredSets.forEach(set => {
+        let activeClass = (currentVocabTopic === set.id) ? 'active' : '';
+        html += `<li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold ${activeClass}" href="#" onclick="filterVocabTopic(${set.id}, '${set.title}', this)">${set.title}</a></li>`;
+    });
+
+    dropdownList.innerHTML = html;
+}
+
+function renderLibrary() {
+    const container = document.getElementById('libraryListContainer');
+    if (!container) return;
+
+    renderLibraryTopicDropdown();
+
+    let filteredSets = gameSets;
+    if (currentLibraryFilter !== 'all') {
+        filteredSets = filteredSets.filter(set => set.language === currentLibraryFilter);
+    }
+    if (currentLibraryTopic !== 'all') {
+        filteredSets = filteredSets.filter(set => set.id === currentLibraryTopic);
+    }
+
+    if (filteredSets.length === 0) {
+        container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><p>ยังไม่มีชุดเกมในคลัง</p></div>`;
+        return;
+    }
+
+    container.innerHTML = filteredSets.map(set => {
+        let badgeClass = 'bg-danger-subtle text-danger';
+        let langText = '🇨🇳 ภาษาจีน';
+        if (set.language === 'english') {
+            badgeClass = 'bg-primary-subtle text-primary';
+            langText = '🇺🇸 ภาษาอังกฤษ';
+        } else if (set.language === 'vietnamese') {
+            badgeClass = 'bg-secondary-subtle text-dark';
+            langText = '🇻🇳 ภาษาเวียดนาม';
+        }
+
+        return `
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge ${badgeClass} px-3 py-2">${langText}</span>
+                                <span class="text-muted small fw-semibold"><i class="bi bi-collection"></i> ${set.words.length} คำ</span>
+                            </div>
+                            <h4 class="fw-bold mb-3">${set.title}</h4>
+                        </div>
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-primary flex-grow-1 rounded-pill fw-bold py-2 shadow-sm" onclick="playSound('click'); openPlayModeModal(${set.id})">
+                                <i class="bi bi-play-fill"></i> เล่นเกม
+                            </button>
+                            <button class="btn btn-outline-secondary rounded-circle" onclick="playSound('click'); viewDetails(${set.id})" title="ดูคำศัพท์" style="width: 40px; height: 40px;"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-outline-secondary rounded-circle" onclick="playSound('click'); editGameSet(${set.id})" title="แก้ไข" style="width: 40px; height: 40px;"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-outline-danger rounded-circle" onclick="playSound('click'); deleteGameSet(${set.id})" title="ลบ" style="width: 40px; height: 40px;"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderAllVocabLibrary() {
+    const container = document.getElementById('allVocabContainer');
+    if (!container) return;
+
+    renderVocabTopicDropdown();
+
+    let filteredSets = gameSets;
+    if (currentVocabFilter !== 'all') {
+        filteredSets = filteredSets.filter(set => set.language === currentVocabFilter);
+    }
+    if (currentVocabTopic !== 'all') {
+        filteredSets = filteredSets.filter(set => set.id === currentVocabTopic);
     }
 
     if (filteredSets.length === 0) {
@@ -305,22 +518,22 @@ function renderAllVocabLibrary() {
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-3">
                 <div class="card-header bg-body-tertiary px-4 py-3 d-flex justify-content-between align-items-center border-0">
                     <h5 class="fw-bold m-0">${set.title}</h5>
-                    <span class="badge ${badgeClass}">${langText} (${set.words.length} คำ)</span>
+                    <span class="badge ${badgeClass} px-3 py-2">${langText} (${set.words.length} คำ)</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4">คำศัพท์</th>
-                                <th>คำอ่าน / พินอิน</th>
-                                <th class="pe-4">ความหมาย</th>
+                                <th class="ps-4 text-secondary small fw-bold">คำศัพท์</th>
+                                <th class="text-secondary small fw-bold">คำอ่าน / พินอิน</th>
+                                <th class="pe-4 text-secondary small fw-bold">ความหมาย</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${set.words.map(w => `
                                 <tr>
                                     <td class="ps-4 fw-bold text-primary fs-5">${w.chinese}</td>
-                                    <td><span class="text-secondary">${w.thaiRead}</span> ${w.pinyin && w.pinyin !== w.thaiRead ? `<small class="text-muted">(${w.pinyin})</small>` : ''}</td>
+                                    <td><span class="text-secondary fw-semibold">${w.thaiRead}</span> ${w.pinyin && w.pinyin !== w.thaiRead ? `<small class="text-muted">(${w.pinyin})</small>` : ''}</td>
                                     <td class="pe-4 fw-bold text-success">${w.meaning}</td>
                                 </tr>
                             `).join('')}
@@ -369,7 +582,7 @@ function showSection(sectionId) {
     const sections = [
         'homeSection', 'createChineseSection', 'createEnglishSection', 'createVietnameseSection', 
         'librarySection', 'vocabListSection', 'importChineseSection', 'importEnglishSection', 'importVietnameseSection', 
-        'quizSection', 'matchSection', 'scrambleSection'
+        'quizSection', 'matchSection', 'scrambleSection', 'speedSection'
     ];
     sections.forEach(id => {
         const el = document.getElementById(id);
@@ -544,12 +757,12 @@ function renderTempWords() {
     }
 
     container.innerHTML = tempWords.map((item, index) => `
-        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+        <div class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
             <div>
                 <h5 class="fw-bold mb-1 text-danger">${item.chinese} <span class="fs-6 text-muted fw-normal">(${item.pinyin} / ${item.thaiRead})</span></h5>
                 <p class="mb-0 text-success small fw-bold">ความหมาย: ${item.meaning}</p>
             </div>
-            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})" style="width: 35px; height: 35px;"><i class="bi bi-trash"></i></button>
         </div>
     `).join('');
 }
@@ -567,12 +780,12 @@ function renderEnglishTempWords() {
     }
 
     container.innerHTML = tempWords.map((item, index) => `
-        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+        <div class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
             <div>
                 <h5 class="fw-bold mb-1 text-primary">${item.chinese} <span class="fs-6 text-muted fw-normal">(${item.thaiRead})</span></h5>
                 <p class="mb-0 text-success small fw-bold">ความหมาย: ${item.meaning}</p>
             </div>
-            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})" style="width: 35px; height: 35px;"><i class="bi bi-trash"></i></button>
         </div>
     `).join('');
 }
@@ -590,12 +803,12 @@ function renderVietnameseTempWords() {
     }
 
     container.innerHTML = tempWords.map((item, index) => `
-        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+        <div class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
             <div>
                 <h5 class="fw-bold mb-1 text-secondary">${item.chinese} <span class="fs-6 text-muted fw-normal">(${item.thaiRead})</span></h5>
                 <p class="mb-0 text-success small fw-bold">ความหมาย: ${item.meaning}</p>
             </div>
-            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="playSound('click'); removeTempWord(${index})" style="width: 35px; height: 35px;"><i class="bi bi-trash"></i></button>
         </div>
     `).join('');
 }
@@ -605,50 +818,6 @@ function removeTempWord(index) {
     if (currentLanguage === 'chinese') renderTempWords();
     else if (currentLanguage === 'english') renderEnglishTempWords();
     else if (currentLanguage === 'vietnamese') renderVietnameseTempWords();
-}
-
-function renderLibrary() {
-    const container = document.getElementById('libraryListContainer');
-    if (gameSets.length === 0) {
-        container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><p>ยังไม่มีชุดเกมในคลัง</p></div>`;
-        return;
-    }
-
-    container.innerHTML = gameSets.map(set => {
-        let badgeClass = 'bg-danger-subtle text-danger';
-        let langText = '🇨🇳 ภาษาจีน';
-        if (set.language === 'english') {
-            badgeClass = 'bg-primary-subtle text-primary';
-            langText = '🇺🇸 ภาษาอังกฤษ';
-        } else if (set.language === 'vietnamese') {
-            badgeClass = 'bg-secondary-subtle text-dark';
-            langText = '🇻🇳 ภาษาเวียดนาม';
-        }
-
-        return `
-            <div class="col-12 col-md-6">
-                <div class="card shadow-sm border-0 rounded-4 h-100">
-                    <div class="card-body p-4 d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="badge ${badgeClass}">${langText}</span>
-                                <span class="text-muted small"><i class="bi bi-collection"></i> ${set.words.length} คำ</span>
-                            </div>
-                            <h4 class="fw-bold mb-3">${set.title}</h4>
-                        </div>
-                        <div class="d-flex gap-2 mt-3">
-                            <button class="btn btn-primary flex-grow-1 rounded-pill fw-bold" onclick="playSound('click'); openPlayModeModal(${set.id})">
-                                <i class="bi bi-play-fill"></i> เล่นเกม
-                            </button>
-                            <button class="btn btn-outline-secondary rounded-circle" onclick="playSound('click'); viewDetails(${set.id})" title="ดูคำศัพท์"><i class="bi bi-eye"></i></button>
-                            <button class="btn btn-outline-secondary rounded-circle" onclick="playSound('click'); editGameSet(${set.id})" title="แก้ไข"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-outline-danger rounded-circle" onclick="playSound('click'); deleteGameSet(${set.id})" title="ลบ"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
 }
 
 function openPlayModeModal(setId) {
@@ -668,11 +837,11 @@ function viewDetails(setId) {
     document.getElementById('viewDetailsTitle').innerText = set.title;
     const list = document.getElementById('viewDetailsList');
     list.innerHTML = set.words.map(w => `
-        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
             <div>
-                <h5 class="fw-bold mb-1 text-primary">${w.chinese} <span class="fs-6 text-muted">(${w.thaiRead})</span></h5>
+                <h5 class="fw-bold mb-1 text-primary">${w.chinese} <span class="fs-6 text-muted fw-normal">(${w.thaiRead})</span></h5>
             </div>
-            <span class="badge bg-success-subtle text-success fs-6">${w.meaning}</span>
+            <span class="badge bg-success-subtle text-success fs-6 px-3 py-2">${w.meaning}</span>
         </li>
     `).join('');
     new bootstrap.Modal(document.getElementById('viewDetailsModal')).show();
@@ -714,7 +883,7 @@ function deleteGameSet(setId) {
     }
 }
 
-// Quiz Game Engine
+// 🎯 Quiz Game Engine
 function initQuizGame() {
     playSound('click');
     if (!activeGameSet) return;
@@ -725,10 +894,15 @@ function initQuizGame() {
     document.getElementById('quizTotalQ').innerText = quizQuestions.length;
     showSection('quizSection');
     loadQuizQuestion();
+
+    startGlobalTimer(() => {
+        endQuizGame();
+    }, 'quizProgressBar');
 }
 
 function loadQuizQuestion() {
     if (quizCurrentIndex >= quizQuestions.length) {
+        stopGlobalTimer();
         endQuizGame();
         return;
     }
@@ -764,16 +938,16 @@ function checkQuizAnswer(selected, correct, btnElement) {
     if (selected === correct) {
         playSound('correct');
         btnElement.classList.remove('btn-outline-primary');
-        btnElement.classList.add('btn-success');
+        btnElement.classList.add('btn-success', 'text-white');
         quizScore++;
     } else {
         playSound('wrong');
         btnElement.classList.remove('btn-outline-primary');
-        btnElement.classList.add('btn-danger');
+        btnElement.classList.add('btn-danger', 'text-white');
         allButtons.forEach(btn => {
             if (btn.innerText.trim() === activeGameSet.words.find(w => w.chinese === correct).meaning) {
                 btn.classList.remove('btn-outline-primary');
-                btn.classList.add('btn-success');
+                btn.classList.add('btn-success', 'text-white');
             }
         });
     }
@@ -781,10 +955,11 @@ function checkQuizAnswer(selected, correct, btnElement) {
     setTimeout(() => {
         quizCurrentIndex++;
         loadQuizQuestion();
-    }, 1000);
+    }, 800);
 }
 
 function endQuizGame() {
+    stopGlobalTimer();
     const total = quizQuestions.length;
     document.getElementById('finalScoreText').innerText = `${quizScore} / ${total}`;
     savePlayHistory(activeGameSet.title, 'โหมดตอบคำถาม', `${quizScore}/${total}`);
@@ -798,7 +973,7 @@ function restartQuizGame() {
     initQuizGame();
 }
 
-// Matching Game Engine
+// 🧩 Matching Game Engine
 function initMatchGame() {
     playSound('click');
     if (!activeGameSet) return;
@@ -815,11 +990,13 @@ function initMatchGame() {
     selectedWords.forEach((word, idx) => {
         const subText = (activeGameSet.language === 'english' || activeGameSet.language === 'vietnamese') ? word.thaiRead : `${word.pinyin} (${word.thaiRead})`;
         matchCards.push({ 
+            uniqueKey: 'w_' + idx,
             id: idx, 
             displayHtml: `<span class="fw-bold fs-5 text-primary">${word.chinese}</span><br><small class="text-secondary">${subText}</small>`, 
             type: 'word' 
         });
         matchCards.push({ 
+            uniqueKey: 'm_' + idx,
             id: idx, 
             displayHtml: `<span class="fw-bold text-success fs-6">ความหมาย:<br>${word.meaning}</span>`, 
             type: 'meaning' 
@@ -829,48 +1006,70 @@ function initMatchGame() {
     matchCards = shuffleArray(matchCards);
     renderMatchGrid();
     firstSelectedCard = null;
+
+    startGlobalTimer(() => {
+        endMatchGameOnTimeout();
+    }, 'matchProgressBar');
 }
 
 function renderMatchGrid() {
     const grid = document.getElementById('matchGridContainer');
-    grid.innerHTML = matchCards.map((card, index) => `
-        <div class="match-card p-3 rounded-4 shadow-sm text-center d-flex flex-column align-items-center justify-content-center fw-bold bg-body-tertiary" 
-             onclick="selectMatchCard(this, ${card.id}, '${card.type}')">
+    const activeCards = matchCards.filter(card => !card.matched);
+
+    grid.innerHTML = activeCards.map((card) => `
+        <div class="match-card p-3 rounded-4 shadow-sm text-center d-flex flex-column align-items-center justify-content-center fw-bold bg-body-tertiary border" 
+             id="card_${card.uniqueKey}"
+             onclick="selectMatchCard(this, '${card.uniqueKey}', ${card.id}, '${card.type}')">
             ${card.displayHtml}
         </div>
     `).join('');
 }
 
-function selectMatchCard(element, id, type) {
-    if (element.classList.contains('matched') || element.classList.contains('selected')) return;
+function selectMatchCard(element, uniqueKey, id, type) {
+    if (element.classList.contains('selected') || element.classList.contains('matched-animation')) return;
 
     if (!firstSelectedCard) {
         playSound('click');
-        firstSelectedCard = { element, id, type };
+        firstSelectedCard = { element, uniqueKey, id, type };
         element.classList.add('selected', 'border-primary', 'border-3');
     } else {
-        if (firstSelectedCard.element === element) return;
+        if (firstSelectedCard.uniqueKey === uniqueKey) return;
 
         if (firstSelectedCard.id === id && firstSelectedCard.type !== type) {
             playSound('correct');
-            firstSelectedCard.element.classList.remove('selected', 'border-primary', 'border-3');
-            firstSelectedCard.element.classList.add('matched');
-            element.classList.add('matched');
             
+            firstSelectedCard.element.classList.remove('selected', 'border-primary', 'border-3');
+            firstSelectedCard.element.classList.add('matched-animation');
+            element.classList.add('matched-animation');
+
+            let card1Key = firstSelectedCard.uniqueKey;
+            let card2Key = uniqueKey;
             firstSelectedCard = null;
-            matchMatchedCount++;
-            document.getElementById('matchProgress').innerText = `${matchMatchedCount} / ${matchTotalPairs} คู่`;
 
-            if (matchMatchedCount === matchTotalPairs) {
-                setTimeout(() => {
-                    document.getElementById('finalMatchScoreText').innerText = `${matchTotalPairs} / ${matchTotalPairs} คู่`;
-                    savePlayHistory(activeGameSet.title, 'โหมดจับคู่', `${matchTotalPairs}/${matchTotalPairs}`);
+            setTimeout(() => {
+                matchCards.forEach(c => {
+                    if (c.uniqueKey === card1Key || c.uniqueKey === card2Key) {
+                        c.matched = true;
+                    }
+                });
 
-                    const modal = new bootstrap.Modal(document.getElementById('matchResultModal'));
-                    modal.show();
-                    triggerConfetti();
-                }, 400);
-            }
+                matchMatchedCount++;
+                document.getElementById('matchProgress').innerText = `${matchMatchedCount} / ${matchTotalPairs} คู่`;
+                renderMatchGrid();
+
+                if (matchMatchedCount === matchTotalPairs) {
+                    stopGlobalTimer();
+                    setTimeout(() => {
+                        document.getElementById('finalMatchScoreText').innerText = `${matchTotalPairs} / ${matchTotalPairs} คู่`;
+                        savePlayHistory(activeGameSet.title, 'โหมดจับคู่', `${matchTotalPairs}/${matchTotalPairs}`);
+
+                        const modal = new bootstrap.Modal(document.getElementById('matchResultModal'));
+                        modal.show();
+                        triggerConfetti();
+                    }, 400);
+                }
+            }, 350);
+
         } else {
             playSound('wrong');
             firstSelectedCard.element.classList.add('border-danger');
@@ -886,7 +1085,16 @@ function selectMatchCard(element, id, type) {
     }
 }
 
-// Scramble Game Engine
+function endMatchGameOnTimeout() {
+    document.getElementById('finalMatchScoreText').innerText = `${matchMatchedCount} / ${matchTotalPairs} คู่`;
+    savePlayHistory(activeGameSet.title, 'โหมดจับคู่', `${matchMatchedCount}/${matchTotalPairs}`);
+
+    const modal = new bootstrap.Modal(document.getElementById('matchResultModal'));
+    modal.show();
+    triggerConfetti();
+}
+
+// 🔤 Scramble Game Engine
 function initScrambleGame() {
     playSound('click');
     if (!activeGameSet) return;
@@ -896,10 +1104,15 @@ function initScrambleGame() {
     document.getElementById('scrambleTitle').innerText = activeGameSet.title;
     showSection('scrambleSection');
     loadScrambleQuestion();
+
+    startGlobalTimer(() => {
+        endScrambleGame();
+    }, 'scrambleProgressBar');
 }
 
 function loadScrambleQuestion() {
     if (scrambleCurrentIndex >= scrambleQuestions.length) {
+        stopGlobalTimer();
         endScrambleGame();
         return;
     }
@@ -937,13 +1150,13 @@ function renderScrambleBoxes() {
     const answerBox = document.getElementById('scrambleAnswerBox');
     const lettersBox = document.getElementById('scrambleLettersBox');
 
-    answerBox.className = "p-3 bg-body-tertiary rounded-4 mb-4 min-vh-25 d-flex flex-wrap align-items-center justify-content-center gap-2 border border-2 border-dashed";
+    answerBox.className = "p-3 bg-body-tertiary rounded-4 mb-4 d-flex flex-wrap align-items-center justify-content-center gap-2 border border-2 border-dashed";
 
     if (userSelectedLetters.length === 0) {
         answerBox.innerHTML = `<span class="text-muted small">แตะคำ/ตัวอักษรด้านล่างเพื่อมาเรียงที่นี่</span>`;
     } else {
         answerBox.innerHTML = userSelectedLetters.map((item, idx) => `
-            <button class="btn btn-warning fw-bold px-3 py-2 rounded-3 shadow-sm" onclick="removeScrambleLetter(${idx})">
+            <button class="btn btn-warning fw-bold px-3 py-2 rounded-3 shadow-sm text-dark" onclick="removeScrambleLetter(${idx})">
                 ${item.char}
             </button>
         `).join('');
@@ -1012,11 +1225,141 @@ function checkScrambleAnswer() {
 }
 
 function endScrambleGame() {
+    stopGlobalTimer();
     const total = scrambleQuestions.length;
     document.getElementById('finalScrambleScoreText').innerText = `${scrambleScore} / ${total}`;
     savePlayHistory(activeGameSet.title, 'เกมเรียงประโยค', `${scrambleScore}/${total}`);
 
     const modal = new bootstrap.Modal(document.getElementById('scrambleResultModal'));
+    modal.show();
+    triggerConfetti();
+}
+
+// Speed Attack Game Engine
+function initSpeedGame() {
+    playSound('click');
+    if (!activeGameSet) return;
+    speedQuestions = shuffleArray([...activeGameSet.words]);
+    speedCurrentIndex = 0;
+    speedScore = 0;
+    
+    document.getElementById('speedTitle').innerText = activeGameSet.title;
+    document.getElementById('speedTotalQ').innerText = speedQuestions.length;
+    showSection('speedSection');
+    loadSpeedQuestion();
+}
+
+function loadSpeedQuestion() {
+    stopSpeedTimer();
+
+    if (speedCurrentIndex >= speedQuestions.length) {
+        endSpeedGame();
+        return;
+    }
+
+    document.getElementById('speedCurrentQ').innerText = speedCurrentIndex + 1;
+    document.getElementById('speedScoreDisplay').innerText = `คะแนน: ${speedScore}`;
+
+    const currentWord = speedQuestions[speedCurrentIndex];
+    document.getElementById('speedQuestionWord').innerText = currentWord.chinese;
+    
+    if (activeGameSet.language === 'english' || activeGameSet.language === 'vietnamese') {
+        document.getElementById('speedQuestionSub').innerText = `คำอ่าน: ${currentWord.thaiRead}`;
+    } else {
+        document.getElementById('speedQuestionSub').innerText = `${currentWord.pinyin} (${currentWord.thaiRead})`;
+    }
+
+    let wrongChoicesOptions = activeGameSet.words.filter(w => w.chinese !== currentWord.chinese);
+    let wrongChoices = shuffleArray(wrongChoicesOptions).slice(0, 3);
+    let allChoices = shuffleArray([currentWord, ...wrongChoices]);
+
+    const container = document.getElementById('speedChoices');
+    container.innerHTML = allChoices.map(choice => `
+        <button class="btn btn-outline-danger btn-lg rounded-pill fw-bold py-3 shadow-sm speed-choice-btn" onclick="checkSpeedAnswer('${choice.chinese}', '${currentWord.chinese}', this)">
+            ${choice.meaning}
+        </button>
+    `).join('');
+
+    timeLeft = maxTimePerQuestion;
+    updateSpeedProgressBar();
+    
+    speedTimer = setInterval(() => {
+        timeLeft -= 0.1;
+        updateSpeedProgressBar();
+
+        if (timeLeft <= 0) {
+            stopSpeedTimer();
+            playSound('wrong');
+            highlightCorrectSpeedAnswer(currentWord.chinese);
+            setTimeout(() => {
+                speedCurrentIndex++;
+                loadSpeedQuestion();
+            }, 800);
+        }
+    }, 100);
+}
+
+function updateSpeedProgressBar() {
+    const bar = document.getElementById('speedProgressBar');
+    if (!bar) return;
+    let percentage = (timeLeft / maxTimePerQuestion) * 100;
+    bar.style.width = `${percentage}%`;
+
+    if (percentage > 50) {
+        bar.className = "progress-bar bg-success progress-bar-striped progress-bar-animated";
+    } else if (percentage > 25) {
+        bar.className = "progress-bar bg-warning progress-bar-striped progress-bar-animated";
+    } else {
+        bar.className = "progress-bar bg-danger progress-bar-striped progress-bar-animated";
+    }
+}
+
+function stopSpeedTimer() {
+    if (speedTimer) {
+        clearInterval(speedTimer);
+        speedTimer = null;
+    }
+}
+
+function checkSpeedAnswer(selected, correct, btnElement) {
+    stopSpeedTimer();
+    document.querySelectorAll('.speed-choice-btn').forEach(btn => btn.disabled = true);
+
+    if (selected === correct) {
+        playSound('correct');
+        btnElement.classList.remove('btn-outline-danger');
+        btnElement.classList.add('btn-success', 'text-white');
+        let bonus = Math.ceil(timeLeft);
+        speedScore += (1 + bonus); 
+    } else {
+        playSound('wrong');
+        btnElement.classList.remove('btn-outline-danger');
+        btnElement.classList.add('btn-danger', 'text-white');
+        highlightCorrectSpeedAnswer(correct);
+    }
+
+    setTimeout(() => {
+        speedCurrentIndex++;
+        loadSpeedQuestion();
+    }, 800);
+}
+
+function highlightCorrectSpeedAnswer(correct) {
+    const allButtons = document.querySelectorAll('.speed-choice-btn');
+    allButtons.forEach(btn => {
+        if (btn.innerText.trim() === activeGameSet.words.find(w => w.chinese === correct).meaning) {
+            btn.classList.remove('btn-outline-danger');
+            btn.classList.add('btn-success', 'text-white');
+        }
+    });
+}
+
+function endSpeedGame() {
+    stopSpeedTimer();
+    document.getElementById('finalSpeedScoreText').innerText = speedScore;
+    savePlayHistory(activeGameSet.title, 'เกมสายฟ้าแลบ', `${speedScore} แต้ม`);
+
+    const modal = new bootstrap.Modal(document.getElementById('speedResultModal'));
     modal.show();
     triggerConfetti();
 }
@@ -1048,7 +1391,7 @@ function renderHomeHistory() {
             <div class="card shadow-sm border-0 rounded-4 mb-3">
                 <div class="card-body p-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <span class="badge bg-primary-subtle text-primary mb-1">${h.mode}</span>
+                        <span class="badge bg-primary-subtle text-primary mb-1 px-2 py-1">${h.mode}</span>
                         <h5 class="fw-bold mb-1">${h.title}</h5>
                         <small class="text-muted"><i class="bi bi-clock"></i> ${h.date}</small>
                     </div>
@@ -1061,9 +1404,9 @@ function renderHomeHistory() {
     }
 
     container.innerHTML = `
-        <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
             <h3 class="fw-bold m-0"><i class="bi bi-clock-history text-primary"></i> ประวัติการเล่น</h3>
-            ${playHistory.length > 0 ? `<button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="clearHistory()">ล้างประวัติ</button>` : ''}
+            ${playHistory.length > 0 ? `<button class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1" onclick="clearHistory()">ล้างประวัติ</button>` : ''}
         </div>
         ${historyHtml}
     `;
