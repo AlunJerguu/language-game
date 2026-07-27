@@ -40,6 +40,7 @@ let currentEditingSetId = null;
 let currentLanguage = '';
 let tempWords = [];
 let activeGameSet = null;
+let currentVocabFilter = 'all'; // ตัวแปรเก็บค่าภาษาที่เลือกกรอง
 
 let quizQuestions = [];
 let quizCurrentIndex = 0;
@@ -50,14 +51,13 @@ let firstSelectedCard = null;
 let matchMatchedCount = 0;
 let matchTotalPairs = 0;
 
-// ตัวแปรสำหรับเกมเรียงประโยค (Scramble Game)
 let scrambleQuestions = [];
 let scrambleCurrentIndex = 0;
 let scrambleScore = 0;
 let currentScrambleLetters = [];
 let userSelectedLetters = [];
 
-// ระบบสร้างเสียงเอฟเฟกต์ด้วย Web Audio API
+// Web Audio API เสียงเอฟเฟกต์
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound(type) {
@@ -169,6 +169,19 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLibrary();
     });
 
+    const navVocabList = document.getElementById('navVocabList');
+    if (navVocabList) {
+        navVocabList.addEventListener('click', (e) => {
+            e.preventDefault();
+            playSound('click');
+            showSection('vocabListSection');
+            currentVocabFilter = 'all';
+            // รีเซ็ตปุ่มตัวกรองกลับมาที่ "ทั้งหมด"
+            const allBtn = document.querySelector('#vocabFilterButtons button:first-child');
+            if (allBtn) filterVocabLanguage('all', allBtn);
+        });
+    }
+
     document.getElementById('navLogo').addEventListener('click', (e) => {
         e.preventDefault();
         playSound('click');
@@ -238,6 +251,89 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// ฟังก์ชันกรองภาษาใน Vocab Library
+function filterVocabLanguage(lang, btnElement) {
+    playSound('click');
+    currentVocabFilter = lang;
+
+    // จัดการสไตล์ปุ่มทั้งหมดในแถวตัวกรอง
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active', 'btn-dark', 'btn-danger', 'btn-primary', 'btn-secondary');
+        if (btn.innerText.includes('ทั้งหมด')) btn.className = 'btn btn-outline-dark btn-sm rounded-pill px-3 fw-bold filter-btn';
+        if (btn.innerText.includes('จีน')) btn.className = 'btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold filter-btn';
+        if (btn.innerText.includes('อังกฤษ')) btn.className = 'btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold filter-btn';
+        if (btn.innerText.includes('เวียดนาม')) btn.className = 'btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold filter-btn';
+    });
+
+    // กำหนดสีปุ่มที่กำลังถูกกดเลือก
+    if (lang === 'all') btnElement.className = 'btn btn-dark btn-sm rounded-pill px-3 fw-bold filter-btn active';
+    else if (lang === 'chinese') btnElement.className = 'btn btn-danger btn-sm rounded-pill px-3 fw-bold filter-btn active';
+    else if (lang === 'english') btnElement.className = 'btn btn-primary btn-sm rounded-pill px-3 fw-bold filter-btn active';
+    else if (lang === 'vietnamese') btnElement.className = 'btn btn-secondary btn-sm rounded-pill px-3 fw-bold filter-btn active';
+
+    renderAllVocabLibrary();
+}
+
+// ฟังก์ชันเรนเดอร์คำศัพท์ใน Vocab Library ตามภาษาที่กรอง
+function renderAllVocabLibrary() {
+    const container = document.getElementById('allVocabContainer');
+    if (!container) return;
+
+    let filteredSets = gameSets;
+    if (currentVocabFilter !== 'all') {
+        filteredSets = gameSets.filter(set => set.language === currentVocabFilter);
+    }
+
+    if (filteredSets.length === 0) {
+        container.innerHTML = `<div class="card shadow-sm border-0 rounded-4 p-4 text-center text-muted"><p class="m-0">ยังไม่มีคำศัพท์ในหมวดหมู่นี้</p></div>`;
+        return;
+    }
+
+    let html = '';
+    filteredSets.forEach(set => {
+        let badgeClass = 'bg-danger-subtle text-danger';
+        let langText = '🇨🇳 ภาษาจีน';
+        if (set.language === 'english') {
+            badgeClass = 'bg-primary-subtle text-primary';
+            langText = '🇺🇸 ภาษาอังกฤษ';
+        } else if (set.language === 'vietnamese') {
+            badgeClass = 'bg-secondary-subtle text-dark';
+            langText = '🇻🇳 ภาษาเวียดนาม';
+        }
+
+        html += `
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-3">
+                <div class="card-header bg-body-tertiary px-4 py-3 d-flex justify-content-between align-items-center border-0">
+                    <h5 class="fw-bold m-0">${set.title}</h5>
+                    <span class="badge ${badgeClass}">${langText} (${set.words.length} คำ)</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">คำศัพท์</th>
+                                <th>คำอ่าน / พินอิน</th>
+                                <th class="pe-4">ความหมาย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${set.words.map(w => `
+                                <tr>
+                                    <td class="ps-4 fw-bold text-primary fs-5">${w.chinese}</td>
+                                    <td><span class="text-secondary">${w.thaiRead}</span> ${w.pinyin && w.pinyin !== w.thaiRead ? `<small class="text-muted">(${w.pinyin})</small>` : ''}</td>
+                                    <td class="pe-4 fw-bold text-success">${w.meaning}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
 function saveGameSetData(lang) {
     let titleId = 'gameTitleInput';
     if (lang === 'english') titleId = 'gameEnglishTitleInput';
@@ -272,21 +368,24 @@ function saveGameSetData(lang) {
 function showSection(sectionId) {
     const sections = [
         'homeSection', 'createChineseSection', 'createEnglishSection', 'createVietnameseSection', 
-        'librarySection', 'importChineseSection', 'importEnglishSection', 'importVietnameseSection', 
+        'librarySection', 'vocabListSection', 'importChineseSection', 'importEnglishSection', 'importVietnameseSection', 
         'quizSection', 'matchSection', 'scrambleSection'
     ];
     sections.forEach(id => {
         const el = document.getElementById(id);
-        if (id === sectionId) {
-            el.classList.remove('d-none');
-        } else {
-            el.classList.add('d-none');
+        if (el) {
+            if (id === sectionId) {
+                el.classList.remove('d-none');
+            } else {
+                el.classList.add('d-none');
+            }
         }
     });
 
     document.querySelectorAll('.navbar-nav .nav-link').forEach(link => link.classList.remove('active'));
     if (sectionId === 'homeSection') document.getElementById('navHome').classList.add('active');
     if (sectionId === 'librarySection') document.getElementById('navLibrary').classList.add('active');
+    if (sectionId === 'vocabListSection') document.getElementById('navVocabList').classList.add('active');
 }
 
 function openImportSection(lang) {
@@ -707,8 +806,8 @@ function initMatchGame() {
     document.getElementById('matchTitle').innerText = activeGameSet.title;
     showSection('matchSection');
 
-    matchTotalPairs = Math.min(5, activeGameSet.words.length);
-    let selectedWords = shuffleArray([...activeGameSet.words]).slice(0, matchTotalPairs);
+    matchTotalPairs = activeGameSet.words.length;
+    let selectedWords = shuffleArray([...activeGameSet.words]);
 
     matchCards = [];
     document.getElementById('matchProgress').innerText = `0 / ${matchTotalPairs} คู่`;
@@ -787,7 +886,7 @@ function selectMatchCard(element, id, type) {
     }
 }
 
-// ==================== 🌟 ระบบเกมเรียงคำ/ประโยค (Scramble Game Engine ไร้รอยต่อ ไม่มี Alert) ====================
+// Scramble Game Engine
 function initScrambleGame() {
     playSound('click');
     if (!activeGameSet) return;
@@ -808,6 +907,16 @@ function loadScrambleQuestion() {
     document.getElementById('scrambleProgress').innerText = `ข้อ ${scrambleCurrentIndex + 1} / ${scrambleQuestions.length}`;
     const currentWordObj = scrambleQuestions[scrambleCurrentIndex];
     document.getElementById('scrambleMeaning').innerText = currentWordObj.meaning;
+
+    let readingBox = document.getElementById('scrambleReadingGuide');
+    if (!readingBox) {
+        const meaningEl = document.getElementById('scrambleMeaning');
+        readingBox = document.createElement('div');
+        readingBox.id = 'scrambleReadingGuide';
+        readingBox.className = 'text-primary fw-bold fs-5 mb-2';
+        meaningEl.parentNode.insertBefore(readingBox, meaningEl.nextSibling);
+    }
+    readingBox.innerHTML = `🔊 คำอ่าน: ${currentWordObj.thaiRead} ${currentWordObj.pinyin ? `(${currentWordObj.pinyin})` : ''}`;
 
     userSelectedLetters = [];
     
@@ -885,7 +994,6 @@ function checkScrambleAnswer() {
         playSound('correct');
         scrambleScore++;
         
-        // 🌟 เปลี่ยนสีกล่องคำตอบเป็นสีเขียวชั่วขณะแล้วข้ามไปข้อถัดไปอัตโนมัติ (ไม่มี Alert มากวนใจ)
         answerBox.classList.remove('border-dashed');
         answerBox.classList.add('border-success', 'bg-success-subtle');
 
@@ -896,7 +1004,6 @@ function checkScrambleAnswer() {
     } else {
         playSound('wrong');
         
-        // 🌟 เอฟเฟกต์กล่องคำตอบกระพริบสีแดงเตือนเบาๆ
         answerBox.classList.add('border-danger', 'bg-danger-subtle');
         setTimeout(() => {
             answerBox.classList.remove('border-danger', 'bg-danger-subtle');
