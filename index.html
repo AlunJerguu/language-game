@@ -6,7 +6,6 @@
     <title>Language Quiz Game</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- 🌟 ไลบรารีสำหรับเอฟเฟกต์ฉลอง (Confetti) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -44,7 +43,9 @@
                     </li>
                 </ul>
                 <div class="d-flex justify-content-center pb-2 pb-lg-0">
-                    <button class="btn btn-outline-secondary rounded-circle shadow-sm" id="themeToggleBtn" style="width: 40px; height: 40px;"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+                    <button class="btn btn-outline-secondary rounded-circle shadow-sm" id="themeToggleBtn" style="width: 40px; height: 40px;" title="เปลี่ยนโหมดสี">
+                        <i class="bi bi-moon-fill" id="themeIcon"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -74,7 +75,7 @@
                     <div class="row g-2 mb-4">
                         <div class="col-12 col-md-6">
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="libraryLangDropdownBtn">
+                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" id="libraryLangDropdownBtn">
                                     <span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>
                                 </button>
                                 <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="libraryLangDropdownList">
@@ -88,7 +89,7 @@
 
                         <div class="col-12 col-md-6">
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="libraryTopicDropdownBtn">
+                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" id="libraryTopicDropdownBtn">
                                     <span><i class="bi bi-filter-left text-warning"></i> เลือกหัวข้อทั้งหมด</span>
                                 </button>
                                 <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="libraryTopicDropdownList">
@@ -110,7 +111,7 @@
                     <div class="row g-2 mb-4">
                         <div class="col-12 col-md-6">
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="vocabLangDropdownBtn">
+                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" id="vocabLangDropdownBtn">
                                     <span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>
                                 </button>
                                 <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="vocabLangDropdownList">
@@ -124,7 +125,7 @@
 
                         <div class="col-12 col-md-6">
                             <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="vocabTopicDropdownBtn">
+                                <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" id="vocabTopicDropdownBtn">
                                     <span><i class="bi bi-filter-left text-info"></i> เลือกหัวข้อทั้งหมด</span>
                                 </button>
                                 <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="vocabTopicDropdownList">
@@ -212,18 +213,14 @@
                         <h4 class="fw-bold m-0" id="quizTitle">โหมดทายคำ</h4>
                         <span class="badge bg-primary fs-6 px-3" id="quizScoreDisplay">คะแนน: 0</span>
                     </div>
-
-                    <div class="progress mb-4 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
-                        <div id="quizProgressBar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
-                        <span id="quizTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
+                    <div class="progress mb-4 rounded-pill shadow-sm" style="height: 12px;">
+                        <div id="quizProgressBar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
-
                     <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-2">คำถามที่ <span id="quizCurrentQ">1</span> / <span id="quizTotalQ">0</span></p>
                             <h1 class="display-1 fw-bold text-danger mt-3 mb-1" id="quizQuestionWord">你好</h1>
                             <h4 class="text-secondary mb-4" id="quizQuestionSub">nǐ hǎo (หนีห่าว)</h4>
-                            
                             <div id="quizChoices" class="d-grid gap-3 mt-4"></div>
                         </div>
                     </div>
@@ -235,12 +232,9 @@
                         <h4 class="fw-bold m-0" id="matchTitle">โหมดจับคู่</h4>
                         <span class="badge bg-success fs-6 px-3" id="matchProgress">0 / 0 คู่</span>
                     </div>
-
-                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
-                        <div id="matchProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
-                        <span id="matchTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
+                    <div class="progress mb-3 rounded-pill shadow-sm" style="height: 12px;">
+                        <div id="matchProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
-
                     <p class="text-center text-muted small mb-3">แตะจับคู่ระหว่างการ์ดคำศัพท์กับการ์ดความหมาย (+2 วิ เมื่อถูก)</p>
                     <div class="match-grid" id="matchGridContainer"></div>
                 </div>
@@ -251,51 +245,36 @@
                         <h4 class="fw-bold m-0 text-warning" id="scrambleTitle">เกมเรียงประโยค</h4>
                         <span class="badge bg-warning text-dark fs-6 px-3" id="scrambleProgress">ข้อ 1 / 0</span>
                     </div>
-
-                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
-                        <div id="scrambleProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
-                        <span id="scrambleTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
+                    <div class="progress mb-4 rounded-pill shadow-sm" style="height: 12px;">
+                        <div id="scrambleProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
-                    
                     <div class="card shadow-sm border-0 rounded-4 mb-3 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-1">ความหมายที่ถูกต้อง:</p>
                             <h3 class="fw-bold text-success mb-3" id="scrambleMeaning">สวัสดี</h3>
                             <p class="small text-secondary mb-4">แตะตัวอักษรหรือคำด้านล่างเพื่อเรียงให้ถูกต้องตามคำศัพท์ต้นฉบับ</p>
-                            
                             <div class="p-3 bg-body rounded-4 mb-4 d-flex flex-wrap align-items-center justify-content-center gap-2 border border-2 border-dashed" id="scrambleAnswerBox" style="min-height: 80px;">
                                 <span class="text-muted small">แตะตัวอักษรด้านล่างเพื่อมาเรียงที่นี่</span>
                             </div>
-
                             <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="scrambleLettersBox"></div>
-
                             <div class="d-flex gap-2">
-                                <button class="btn btn-outline-secondary w-50 rounded-pill py-2 fw-bold" onclick="resetScrambleCurrent()">
-                                    <i class="bi bi-arrow-counterclockwise"></i> ล้างคำตอบ
-                                </button>
-                                <button class="btn btn-warning w-50 rounded-pill py-2 fw-bold text-dark shadow-sm" onclick="checkScrambleAnswer()">
-                                    <i class="bi bi-check-lg"></i> ตรวจคำตอบ (+2s)
-                                </button>
+                                <button class="btn btn-outline-secondary w-50 rounded-pill py-2 fw-bold" onclick="resetScrambleCurrent()"><i class="bi bi-arrow-counterclockwise"></i> ล้างคำตอบ</button>
+                                <button class="btn btn-warning w-50 rounded-pill py-2 fw-bold text-dark shadow-sm" onclick="checkScrambleAnswer()"><i class="bi bi-check-lg"></i> ตรวจคำตอบ (+2s)</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 🎴 เกมจับคู่การ์ดความจำ (Memory Card Flip / Concentration) -->
                 <div id="memoryFlipSection" class="d-none">
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
                         <h4 class="fw-bold m-0 text-info" id="memoryFlipTitle">จับคู่การ์ดความจำ</h4>
                         <span class="badge bg-info text-dark fs-6 px-3" id="memoryFlipProgress">0 / 0 คู่</span>
                     </div>
-
-                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
-                        <div id="memoryFlipProgressBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
-                        <span id="memoryFlipTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
+                    <div class="progress mb-3 rounded-pill shadow-sm" style="height: 12px;">
+                        <div id="memoryFlipProgressBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
-
-                    <p class="text-center text-muted small mb-3">แตะพลิกการ์ดคว่ำทีละ 2 ใบเพื่อหาคู่คำศัพท์และความหมายที่ตรงกัน (+2s เมื่อถูก)</p>
-                    
+                    <p class="text-center text-muted small mb-3" id="memoryFlipInstruction">จดจำตำแหน่งการ์ด (10s) แล้วพลิกหาคู่คำศัพท์ (+3s เมื่อถูก)</p>
                     <div class="row g-2" id="memoryFlipGridContainer"></div>
                 </div>
 
@@ -305,17 +284,14 @@
                         <h4 class="fw-bold m-0 text-danger" id="speedTitle">สายฟ้าแลบ</h4>
                         <span class="badge bg-danger fs-6 px-3" id="speedScoreDisplay">คะแนน: 0</span>
                     </div>
-
                     <div class="progress mb-4 rounded-pill shadow-sm" style="height: 12px;">
                         <div id="speedProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
-
                     <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-2">ข้อที่ <span id="speedCurrentQ">1</span> / <span id="speedTotalQ">0</span></p>
                             <h1 class="display-2 fw-bold text-danger mt-2 mb-1" id="speedQuestionWord">คำศัพท์</h1>
                             <h4 class="text-secondary mb-4" id="speedQuestionSub">คำอ่าน</h4>
-                            
                             <div id="speedChoices" class="d-grid gap-3 mt-3"></div>
                         </div>
                     </div>
@@ -325,7 +301,6 @@
         </div>
     </main>
 
-    <!-- Modals -->
     <div class="modal fade" id="importLanguageModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow-lg p-3 bg-body text-body">
@@ -340,24 +315,15 @@
                     <div class="d-grid gap-3">
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('chinese')" data-bs-dismiss="modal">
                             <div class="bg-danger text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇨🇳</div>
-                            <div>
-                                <div class="fw-bold">ภาษาจีน (Chinese)</div>
-                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์พร้อมพินอิน</small>
-                            </div>
+                            <div><div class="fw-bold">ภาษาจีน (Chinese)</div><small class="text-muted fw-normal">นำเข้าชุดคำศัพท์พร้อมพินอิน</small></div>
                         </button>
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('english')" data-bs-dismiss="modal">
                             <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇺🇸</div>
-                            <div>
-                                <div class="fw-bold">ภาษาอังกฤษ (English)</div>
-                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์คำอ่านและความหมาย</small>
-                            </div>
+                            <div><div class="fw-bold">ภาษาอังกฤษ (English)</div><small class="text-muted fw-normal">นำเข้าชุดคำศัพท์คำอ่านและความหมาย</small></div>
                         </button>
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('vietnamese')" data-bs-dismiss="modal">
                             <div class="bg-secondary text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇻🇳</div>
-                            <div>
-                                <div class="fw-bold">ภาษาเวียดนาม (Vietnamese)</div>
-                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์เวียดนาม</small>
-                            </div>
+                            <div><div class="fw-bold">ภาษาเวียดนาม (Vietnamese)</div><small class="text-muted fw-normal">นำเข้าชุดคำศัพท์เวียดนาม</small></div>
                         </button>
                     </div>
                 </div>
@@ -365,7 +331,6 @@
         </div>
     </div>
 
-    <!-- 🌟 Popup เลือกโหมดเกม (มีเกมจับคู่การ์ดความจำแล้ว) -->
     <div class="modal fade" id="playModeSelectModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow-lg p-3 bg-body text-body">
@@ -380,39 +345,23 @@
                     <div class="d-grid gap-3">
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initQuizGame()" data-bs-dismiss="modal">
                             <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-question-square fs-5"></i></div>
-                            <div>
-                                <div class="fw-bold">โหมดตอบคำถาม</div>
-                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อตอบถูก)</small>
-                            </div>
+                            <div><div class="fw-bold">โหมดตอบคำถาม</div><small class="text-muted fw-normal">เวลา 30s (+2s เมื่อตอบถูก)</small></div>
                         </button>
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initMatchGame()" data-bs-dismiss="modal">
                             <div class="bg-success text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-grid-3x3-gap fs-5"></i></div>
-                            <div>
-                                <div class="fw-bold">โหมดจับคู่การ์ด</div>
-                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อจับคู่ถูก)</small>
-                            </div>
+                            <div><div class="fw-bold">โหมดจับคู่การ์ด</div><small class="text-muted fw-normal">เวลา 30s (+2s เมื่อจับคู่ถูก)</small></div>
                         </button>
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initScrambleGame()" data-bs-dismiss="modal">
                             <div class="bg-warning text-dark rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-shuffle fs-5"></i></div>
-                            <div>
-                                <div class="fw-bold">เกมเรียงประโยค</div>
-                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อเรียงถูก)</small>
-                            </div>
+                            <div><div class="fw-bold">เกมเรียงประโยค</div><small class="text-muted fw-normal">เวลา 30s (+2s เมื่อเรียงถูก)</small></div>
                         </button>
-                        <!-- 🎴 ปุ่มเมนูเกมจับคู่การ์ดความจำ -->
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initMemoryFlipGame()" data-bs-dismiss="modal">
                             <div class="bg-info text-dark rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-collection fs-5"></i></div>
-                            <div>
-                                <div class="fw-bold">จับคู่การ์ดความจำ</div>
-                                <small class="text-muted fw-normal">พลิกการ์ดหาคู่คำศัพท์ (เวลา 30s +2s)</small>
-                            </div>
+                            <div><div class="fw-bold">จับคู่การ์ดความจำ</div><small class="text-muted fw-normal">พลิกการ์ดหาคู่ (เวลา 60s +3s เมื่อถูก)</small></div>
                         </button>
                         <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initSpeedGame()" data-bs-dismiss="modal">
                             <div class="bg-danger text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-lightning-fill fs-5"></i></div>
-                            <div>
-                                <div class="fw-bold">โหมดสายฟ้าแลบ</div>
-                                <small class="text-muted fw-normal">จับเวลา 5 วินาทีต่อข้อ</small>
-                            </div>
+                            <div><div class="fw-bold">โหมดสายฟ้าแลบ</div><small class="text-muted fw-normal">จับเวลา 5 วินาทีต่อข้อ</small></div>
                         </button>
                     </div>
                 </div>
@@ -430,120 +379,31 @@
         </div>
     </div>
 
-    <div class="modal fade" id="quizResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
-                <div class="modal-body">
-                    <div class="display-1 mb-2">🎉</div>
-                    <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
-                    <p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p>
-                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
-                        <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
-                        <h1 class="display-4 fw-bold text-primary m-0" id="finalScoreText">0 / 0</h1>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3" onclick="restartQuizGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="quizResultModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body"><div class="modal-body"><div class="display-1 mb-2">🎉</div><h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2><p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p><div class="bg-body-secondary rounded-4 p-3 mb-4"><span class="text-muted small d-block">คะแนนที่คุณทำได้</span><h1 class="display-4 fw-bold text-primary m-0" id="finalScoreText">0 / 0</h1></div><div class="d-grid gap-2"><button class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3" onclick="restartQuizGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button><button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button></div></div></div></div></div>
 
-    <div class="modal fade" id="matchResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
-                <div class="modal-body">
-                    <div class="display-1 mb-2">🎉</div>
-                    <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
-                    <p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p>
-                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
-                        <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
-                        <h1 class="display-4 fw-bold text-success m-0" id="finalMatchScoreText">0 / 0</h1>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm text-white py-3" onclick="initMatchGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="matchResultModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body"><div class="modal-body"><div class="display-1 mb-2">🎉</div><h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2><p class="text-muted mb-4">คุณทำแบบทดสอบเสร็จเรียบร้อยแล้ว</p><div class="bg-body-secondary rounded-4 p-3 mb-4"><span class="text-muted small d-block">คะแนนที่คุณทำได้</span><h1 class="display-4 fw-bold text-success m-0" id="finalMatchScoreText">0 / 0</h1></div><div class="d-grid gap-2"><button class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm text-white py-3" onclick="initMatchGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button><button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button></div></div></div></div></div>
 
-    <div class="modal fade" id="scrambleResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
-                <div class="modal-body">
-                    <div class="display-1 mb-2">🎉</div>
-                    <h2 class="fw-bold mb-1">สุดยอดไปเลย!</h2>
-                    <p class="text-muted mb-4">หมดเวลาหรือเรียงคำศัพท์ครบแล้ว</p>
-                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
-                        <span class="text-muted small d-block">คะแนนที่คุณทำได้</span>
-                        <h1 class="display-4 fw-bold text-warning m-0" id="finalScrambleScoreText">0 / 0</h1>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-dark py-3" onclick="initScrambleGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="scrambleResultModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body"><div class="modal-body"><div class="display-1 mb-2">🎉</div><h2 class="fw-bold mb-1">สุดยอดไปเลย!</h2><p class="text-muted mb-4">หมดเวลาหรือเรียงคำศัพท์ครบแล้ว</p><div class="bg-body-secondary rounded-4 p-3 mb-4"><span class="text-muted small d-block">คะแนนที่คุณทำได้</span><h1 class="display-4 fw-bold text-warning m-0" id="finalScrambleScoreText">0 / 0</h1></div><div class="d-grid gap-2"><button class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-dark py-3" onclick="initScrambleGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button><button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button></div></div></div></div></div>
 
-    <!-- 🎴 ผลลัพธ์เกมจับคู่การ์ดความจำ -->
-    <div class="modal fade" id="memoryFlipResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
-                <div class="modal-body">
-                    <div class="display-1 mb-2">🧠</div>
-                    <h2 class="fw-bold mb-1">ความจำยอดเยี่ยม!</h2>
-                    <p class="text-muted mb-4">คุณเปิดการ์ดจับคู่ครบทุกคู่แล้ว</p>
-                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
-                        <span class="text-muted small d-block">คู่ที่จับคู่สำเร็จ</span>
-                        <h1 class="display-4 fw-bold text-info m-0" id="finalMemoryFlipScoreText">0 / 0</h1>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-info btn-lg rounded-pill fw-bold shadow-sm text-dark py-3" onclick="initMemoryFlipGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="memoryFlipResultModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body"><div class="modal-body"><div class="display-1 mb-2">🧠</div><h2 class="fw-bold mb-1">ความจำยอดเยี่ยม!</h2><p class="text-muted mb-4">คุณเปิดการ์ดจับคู่ครบทุกคู่แล้ว</p><div class="bg-body-secondary rounded-4 p-3 mb-4"><span class="text-muted small d-block">คู่ที่จับคู่สำเร็จ</span><h1 class="display-4 fw-bold text-info m-0" id="finalMemoryFlipScoreText">0 / 0</h1></div><div class="d-grid gap-2"><button class="btn btn-info btn-lg rounded-pill fw-bold shadow-sm text-dark py-3" onclick="initMemoryFlipGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button><button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button></div></div></div></div></div>
 
-    <div class="modal fade" id="speedResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
-                <div class="modal-body">
-                    <div class="display-1 mb-2">⚡</div>
-                    <h2 class="fw-bold mb-1">จบเวลาสายฟ้าแลบ!</h2>
-                    <p class="text-muted mb-4">คุณทำความเร็วและคะแนนได้ยอดเยี่ยม</p>
-                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
-                        <span class="text-muted small d-block">คะแนนรวมทั้งหมด</span>
-                        <h1 class="display-4 fw-bold text-danger m-0" id="finalSpeedScoreText">0</h1>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm text-white py-3" onclick="initSpeedGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal fade" id="speedResultModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body"><div class="modal-body"><div class="display-1 mb-2">⚡</div><h2 class="fw-bold mb-1">จบเวลาสายฟ้าแลบ!</h2><p class="text-muted mb-4">คุณทำความเร็วและคะแนนได้ยอดเยี่ยม</p><div class="bg-body-secondary rounded-4 p-3 mb-4"><span class="text-muted small d-block">คะแนนรวมทั้งหมด</span><h1 class="display-4 fw-bold text-danger m-0" id="finalSpeedScoreText">0</h1></div><div class="d-grid gap-2"><button class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm text-white py-3" onclick="initSpeedGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button><button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button></div></div></div></div></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-            const menuToggle = document.getElementById('navbarNav');
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapse = document.getElementById('navbarNav');
             
-            if (menuToggle) {
-                const bsCollapse = new bootstrap.Collapse(menuToggle, {toggle: false});
-                navLinks.forEach((l) => {
-                    l.addEventListener('click', () => {
-                        if (window.innerWidth < 992) {
+            if (navbarCollapse) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                
+                // ดึงลิงก์ทั้งหมดในเมนู
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 992 && navbarCollapse.classList.contains('show')) {
                             bsCollapse.hide();
                         }
                     });
