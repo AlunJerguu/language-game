@@ -6,10 +6,11 @@
     <title>Language Quiz Game</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- 🌟 ไลบรารีสำหรับเอฟเฟกต์ฉลอง (Confetti) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="bg-body text-body">
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm border-bottom">
         <div class="container-fluid px-3">
@@ -57,7 +58,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
                         <h3 class="fw-bold m-0"><i class="bi bi-clock-history text-primary"></i> ประวัติการเล่น</h3>
                     </div>
-                    <div class="card shadow-sm border-0 rounded-4 mb-3">
+                    <div class="card shadow-sm border-0 rounded-4 mb-3 bg-body-tertiary">
                         <div class="card-body p-4 text-center text-muted">
                             <p class="m-0">ประวัติการเล่นจะแสดงที่นี่หลังจากคุณเล่นเกมจบครับ</p>
                         </div>
@@ -76,7 +77,7 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="libraryLangDropdownBtn">
                                     <span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>
                                 </button>
-                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0" id="libraryLangDropdownList">
+                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="libraryLangDropdownList">
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold active" href="#" onclick="filterLibraryLanguage('all', 'ทั้งหมดทุกภาษา', this)">ทั้งหมดทุกภาษา</a></li>
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold text-danger" href="#" onclick="filterLibraryLanguage('chinese', '🇨🇳 ภาษาจีน', this)">🇨🇳 ภาษาจีน</a></li>
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold text-primary" href="#" onclick="filterLibraryLanguage('english', '🇺🇸 ภาษาอังกฤษ', this)">🇺🇸 ภาษาอังกฤษ</a></li>
@@ -90,7 +91,7 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="libraryTopicDropdownBtn">
                                     <span><i class="bi bi-filter-left text-warning"></i> เลือกหัวข้อทั้งหมด</span>
                                 </button>
-                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0" id="libraryTopicDropdownList">
+                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="libraryTopicDropdownList">
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold active" href="#" onclick="filterLibraryTopic('all', 'เลือกหัวข้อทั้งหมด', this)">เลือกหัวข้อทั้งหมด</a></li>
                                 </ul>
                             </div>
@@ -112,7 +113,7 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="vocabLangDropdownBtn">
                                     <span><i class="bi bi-translate text-primary"></i> ทั้งหมดทุกภาษา</span>
                                 </button>
-                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0" id="vocabLangDropdownList">
+                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="vocabLangDropdownList">
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold active" href="#" onclick="filterVocabLanguage('all', 'ทั้งหมดทุกภาษา', this)">ทั้งหมดทุกภาษา</a></li>
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold text-danger" href="#" onclick="filterVocabLanguage('chinese', '🇨🇳 ภาษาจีน', this)">🇨🇳 ภาษาจีน</a></li>
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold text-primary" href="#" onclick="filterVocabLanguage('english', '🇺🇸 ภาษาอังกฤษ', this)">🇺🇸 ภาษาอังกฤษ</a></li>
@@ -126,7 +127,7 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-4 py-2 fw-bold w-100 d-flex justify-content-between align-items-center bg-body shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="vocabTopicDropdownBtn">
                                     <span><i class="bi bi-filter-left text-info"></i> เลือกหัวข้อทั้งหมด</span>
                                 </button>
-                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0" id="vocabTopicDropdownList">
+                                <ul class="dropdown-menu w-100 rounded-4 shadow p-2 border-0 bg-body" id="vocabTopicDropdownList">
                                     <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold active" href="#" onclick="filterVocabTopic('all', 'เลือกหัวข้อทั้งหมด', this)">เลือกหัวข้อทั้งหมด</a></li>
                                 </ul>
                             </div>
@@ -136,280 +137,88 @@
                     <div id="allVocabContainer" class="d-flex flex-column gap-3"></div>
                 </div>
 
-                <div id="createChineseSection" class="d-none">
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
-                        <div>
-                            <span class="badge bg-danger-subtle text-danger mb-1">🇨🇳 ภาษาจีน</span>
-                            <h3 class="fw-bold m-0 text-danger" id="createSectionTitle">สร้างชุดคำศัพท์ใหม่</h3>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="mb-4 pb-4 border-bottom">
-                                <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="gameTitleInput" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์จีน หมวดอาหาร">
-                            </div>
-                            <h5 class="fw-bold mb-3"><i class="bi bi-plus-lg"></i> เพิ่มคำศัพท์</h5>
-                            <form id="addWordForm">
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">อักษรจีน</label>
-                                        <input type="text" id="inputChinese" class="form-control form-control-lg rounded-3 shadow-none" placeholder="เช่น 你好" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">พินอิน (Pinyin)</label>
-                                        <input type="text" id="inputPinyin" class="form-control rounded-3 shadow-none" placeholder="เช่น nǐ hǎo" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">คำอ่านไทย</label>
-                                        <input type="text" id="inputThaiRead" class="form-control rounded-3 shadow-none" placeholder="เช่น หนีห่าว" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">ความหมาย</label>
-                                        <input type="text" id="inputMeaning" class="form-control rounded-3 shadow-none" placeholder="เช่น สวัสดี" required>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-outline-danger w-100 rounded-pill mt-4 fw-bold py-2 shadow-sm">
-                                    <i class="bi bi-plus-circle"></i> นำคำศัพท์นี้ลงรายการ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="fw-bold m-0">คำศัพท์ในชุดนี้</h5>
-                                <span class="badge bg-primary rounded-pill fs-6 px-3"><span id="wordCount">0</span> คำ</span>
-                            </div>
-                            <div id="wordListContainer" class="list-group list-group-flush mb-3">
-                                <p class="text-muted text-center py-3 m-0">ยังไม่มีคำศัพท์</p>
-                            </div>
-                            <button id="saveGameSetBtn" class="btn btn-danger w-100 rounded-pill btn-lg shadow-sm fw-bold" disabled>
-                                <i class="bi bi-check-circle-fill"></i> <span id="saveBtnText">บันทึกชุดเกม</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="createEnglishSection" class="d-none">
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
-                        <div>
-                            <span class="badge bg-primary-subtle text-primary mb-1">🇺🇸 ภาษาอังกฤษ</span>
-                            <h3 class="fw-bold m-0 text-primary" id="createEnglishSectionTitle">สร้างชุดคำศัพท์ภาษาอังกฤษ</h3>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="mb-4 pb-4 border-bottom">
-                                <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="gameEnglishTitleInput" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์อังกฤษ หมวดสัตว์">
-                            </div>
-                            <h5 class="fw-bold mb-3"><i class="bi bi-plus-lg"></i> เพิ่มคำศัพท์ภาษาอังกฤษ</h5>
-                            <form id="addEnglishWordForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold small text-muted">คำศัพท์ภาษาอังกฤษ</label>
-                                        <input type="text" id="inputEnglishWord" class="form-control form-control-lg rounded-3 shadow-none" placeholder="เช่น Apple" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">คำอ่านไทย</label>
-                                        <input type="text" id="inputEnglishThaiRead" class="form-control rounded-3 shadow-none" placeholder="เช่น แอพเพิล" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">ความหมายไทย</label>
-                                        <input type="text" id="inputEnglishMeaning" class="form-control rounded-3 shadow-none" placeholder="เช่น แอปเปิ้ล" required>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-outline-primary w-100 rounded-pill mt-4 fw-bold py-2 shadow-sm">
-                                    <i class="bi bi-plus-circle"></i> นำคำศัพท์นี้ลงรายการ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="fw-bold m-0">คำศัพท์ในชุดนี้</h5>
-                                <span class="badge bg-primary rounded-pill fs-6 px-3"><span id="englishWordCount">0</span> คำ</span>
-                            </div>
-                            <div id="englishWordListContainer" class="list-group list-group-flush mb-3">
-                                <p class="text-muted text-center py-3 m-0">ยังไม่มีคำศัพท์</p>
-                            </div>
-                            <button id="saveEnglishGameSetBtn" class="btn btn-primary w-100 rounded-pill btn-lg shadow-sm fw-bold" disabled>
-                                <i class="bi bi-check-circle-fill"></i> <span id="saveEnglishBtnText">บันทึกชุดเกม</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="createVietnameseSection" class="d-none">
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
-                        <div>
-                            <span class="badge bg-secondary-subtle text-dark mb-1">🇻🇳 ภาษาเวียดนาม</span>
-                            <h3 class="fw-bold m-0 text-secondary" id="createVietnameseSectionTitle">สร้างชุดคำศัพท์ภาษาเวียดนาม</h3>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="mb-4 pb-4 border-bottom">
-                                <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="gameVietnameseTitleInput" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์เวียดนาม หมวดอาหาร">
-                            </div>
-                            <h5 class="fw-bold mb-3"><i class="bi bi-plus-lg"></i> เพิ่มคำศัพท์ภาษาเวียดนาม</h5>
-                            <form id="addVietnameseWordForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold small text-muted">อักษรเวียดนาม</label>
-                                        <input type="text" id="inputVietnameseWord" class="form-control form-control-lg rounded-3 shadow-none" placeholder="เช่น Xin chào" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">คำอ่านไทย</label>
-                                        <input type="text" id="inputVietnameseThaiRead" class="form-control rounded-3 shadow-none" placeholder="เช่น ซินจ่าว" required>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="form-label fw-bold small text-muted">ความหมายไทย</label>
-                                        <input type="text" id="inputVietnameseMeaning" class="form-control rounded-3 shadow-none" placeholder="เช่น สวัสดี" required>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-outline-secondary w-100 rounded-pill mt-4 fw-bold py-2 shadow-sm">
-                                    <i class="bi bi-plus-circle"></i> นำคำศัพท์นี้ลงรายการ
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="fw-bold m-0">คำศัพท์ในชุดนี้</h5>
-                                <span class="badge bg-secondary rounded-pill fs-6 px-3"><span id="vietnameseWordCount">0</span> คำ</span>
-                            </div>
-                            <div id="vietnameseWordListContainer" class="list-group list-group-flush mb-3">
-                                <p class="text-muted text-center py-3 m-0">ยังไม่มีคำศัพท์</p>
-                            </div>
-                            <button id="saveVietnameseGameSetBtn" class="btn btn-secondary w-100 rounded-pill btn-lg shadow-sm fw-bold text-white" disabled>
-                                <i class="bi bi-check-circle-fill"></i> <span id="saveVietnameseBtnText">บันทึกชุดเกม</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="importChineseSection" class="d-none">
                     <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
                         <div>
                             <span class="badge bg-danger-subtle text-danger mb-1">🇨🇳 ภาษาจีน</span>
                             <h3 class="fw-bold m-0 text-success">Import ชุดคำศัพท์ภาษาจีน</h3>
                         </div>
                     </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 mb-4 bg-body-tertiary">
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="importChineseDeckName" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์ภาษาจีน หมวดผลไม้">
+                                <input type="text" id="importChineseDeckName" class="form-control form-control-lg rounded-3 shadow-none bg-body text-body" placeholder="เช่น คำศัพท์ภาษาจีน หมวดผลไม้">
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label fw-bold">รูปแบบข้อมูล (จีน | พินอิน | อ่านไทย | ความหมาย)</label>
-                                <textarea id="importChineseTextArea" class="form-control rounded-3 font-monospace shadow-none" rows="6" placeholder="苹果 | píngguǒ | ผิงกั่ว | แอปเปิ้ล
-香蕉 | xiāngjiāo | เซียงเจียว | กล้วย"></textarea>
-                                <div class="form-text text-muted small mt-2">
-                                    * 1 บรรทัด = 1 คำ ใช้เครื่องหมาย <code>|</code> คั่นข้อมูล
-                                </div>
+                                <textarea id="importChineseTextArea" class="form-control rounded-3 font-monospace shadow-none bg-body text-body" rows="6" placeholder="苹果 | píngguǒ | ผิงกั่ว | แอปเปิ้ล"></textarea>
                             </div>
-
-                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportChineseData()">
-                                <i class="bi bi-cloud-arrow-down-fill"></i> บันทึกเข้า Library (ภาษาจีน)
-                            </button>
+                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportChineseData()">บันทึกเข้า Library</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="importEnglishSection" class="d-none">
                     <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
                         <div>
                             <span class="badge bg-primary-subtle text-primary mb-1">🇺🇸 ภาษาอังกฤษ</span>
                             <h3 class="fw-bold m-0 text-success">Import ชุดคำศัพท์ภาษาอังกฤษ</h3>
                         </div>
                     </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 mb-4 bg-body-tertiary">
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="importEnglishDeckName" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์ภาษาอังกฤษ หมวดผลไม้">
+                                <input type="text" id="importEnglishDeckName" class="form-control form-control-lg rounded-3 shadow-none bg-body text-body" placeholder="เช่น คำศัพท์ภาษาอังกฤษ หมวดผลไม้">
                             </div>
-
                             <div class="mb-3">
-                                <label class="form-label fw-bold">รูปแบบข้อมูล (คำศัพท์อังกฤษ | คำอ่านไทย | ความหมายไทย)</label>
-                                <textarea id="importEnglishTextArea" class="form-control rounded-3 font-monospace shadow-none" rows="6" placeholder="Apple | แอพเพิล | แอปเปิ้ล
-Banana | บานาน่า | กล้วย"></textarea>
-                                <div class="form-text text-muted small mt-2">
-                                    * 1 บรรทัด = 1 คำ ใช้เครื่องหมาย <code>|</code> คั่นข้อมูล
-                                </div>
+                                <label class="form-label fw-bold">รูปแบบข้อมูล (อังกฤษ | อ่านไทย | ความหมายไทย)</label>
+                                <textarea id="importEnglishTextArea" class="form-control rounded-3 font-monospace shadow-none bg-body text-body" rows="6" placeholder="Apple | แอพเพิล | แอปเปิ้ล"></textarea>
                             </div>
-
-                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportEnglishData()">
-                                <i class="bi bi-cloud-arrow-down-fill"></i> บันทึกเข้า Library (ภาษาอังกฤษ)
-                            </button>
+                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportEnglishData()">บันทึกเข้า Library</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="importVietnameseSection" class="d-none">
                     <div class="d-flex align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle me-3 shadow-sm border" onclick="playSound('click'); showSection('librarySection')"><i class="bi bi-arrow-left"></i></button>
                         <div>
                             <span class="badge bg-secondary-subtle text-dark mb-1">🇻🇳 ภาษาเวียดนาม</span>
                             <h3 class="fw-bold m-0 text-success">Import ชุดคำศัพท์ภาษาเวียดนาม</h3>
                         </div>
                     </div>
-
-                    <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 mb-4 bg-body-tertiary">
                         <div class="card-body p-4">
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-primary">ชื่อชุดเกม / หัวข้อ</label>
-                                <input type="text" id="importVietnameseDeckName" class="form-control form-control-lg rounded-3 border-primary shadow-none" placeholder="เช่น คำศัพท์ภาษาเวียดนาม หมวดทักทาย">
+                                <input type="text" id="importVietnameseDeckName" class="form-control form-control-lg rounded-3 shadow-none bg-body text-body" placeholder="เช่น คำศัพท์ภาษาเวียดนาม หมวดทักทาย">
                             </div>
-
                             <div class="mb-3">
-                                <label class="form-label fw-bold">รูปแบบข้อมูล (อักษรเวียดนาม | คำอ่านไทย | ความหมายไทย)</label>
-                                <textarea id="importVietnameseTextArea" class="form-control rounded-3 font-monospace shadow-none" rows="6" placeholder="Xin chào | ซินจ่าว | สวัสดี
-Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
-                                <div class="form-text text-muted small mt-2">
-                                    * 1 บรรทัด = 1 คำ ใช้เครื่องหมาย <code>|</code> คั่นข้อมูล
-                                </div>
+                                <label class="form-label fw-bold">รูปแบบข้อมูล (เวียดนาม | อ่านไทย | ความหมายไทย)</label>
+                                <textarea id="importVietnameseTextArea" class="form-control rounded-3 font-monospace shadow-none bg-body text-body" rows="6" placeholder="Xin chào | ซินจ่าว | สวัสดี"></textarea>
                             </div>
-
-                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportVietnameseData()">
-                                <i class="bi bi-cloud-arrow-down-fill"></i> บันทึกเข้า Library (ภาษาเวียดนาม)
-                            </button>
+                            <button class="btn btn-success w-100 rounded-pill btn-lg shadow-sm fw-bold" onclick="processImportVietnameseData()">บันทึกเข้า Library</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="quizSection" class="d-none">
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
                         <h4 class="fw-bold m-0" id="quizTitle">โหมดทายคำ</h4>
                         <span class="badge bg-primary fs-6 px-3" id="quizScoreDisplay">คะแนน: 0</span>
                     </div>
 
-                    <div class="progress mb-4 rounded-pill shadow-sm" style="height: 12px;">
-                        <div id="quizProgressBar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                    <div class="progress mb-4 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
+                        <div id="quizProgressBar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
+                        <span id="quizTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
                     </div>
 
-                    <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-2">คำถามที่ <span id="quizCurrentQ">1</span> / <span id="quizTotalQ">0</span></p>
                             <h1 class="display-1 fw-bold text-danger mt-3 mb-1" id="quizQuestionWord">你好</h1>
@@ -422,37 +231,39 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
                 <div id="matchSection" class="d-none">
                     <div class="d-flex justify-content-between align-items-center mb-2 mt-3">
-                        <button class="btn btn-light rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
                         <h4 class="fw-bold m-0" id="matchTitle">โหมดจับคู่</h4>
                         <span class="badge bg-success fs-6 px-3" id="matchProgress">0 / 0 คู่</span>
                     </div>
 
-                    <div class="progress mb-3 rounded-pill shadow-sm" style="height: 12px;">
-                        <div id="matchProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
+                        <div id="matchProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
+                        <span id="matchTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
                     </div>
 
-                    <p class="text-center text-muted small mb-3">แตะจับคู่ระหว่างการ์ดคำศัพท์กับการ์ดความหมาย</p>
+                    <p class="text-center text-muted small mb-3">แตะจับคู่ระหว่างการ์ดคำศัพท์กับการ์ดความหมาย (+2 วิ เมื่อถูก)</p>
                     <div class="match-grid" id="matchGridContainer"></div>
                 </div>
 
                 <div id="scrambleSection" class="d-none">
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
                         <h4 class="fw-bold m-0 text-warning" id="scrambleTitle">เกมเรียงประโยค</h4>
                         <span class="badge bg-warning text-dark fs-6 px-3" id="scrambleProgress">ข้อ 1 / 0</span>
                     </div>
 
-                    <div class="progress mb-3 rounded-pill shadow-sm" style="height: 12px;">
-                        <div id="scrambleProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
+                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
+                        <div id="scrambleProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
+                        <span id="scrambleTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
                     </div>
                     
-                    <div class="card shadow-sm border-0 rounded-4 mb-3">
+                    <div class="card shadow-sm border-0 rounded-4 mb-3 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-1">ความหมายที่ถูกต้อง:</p>
                             <h3 class="fw-bold text-success mb-3" id="scrambleMeaning">สวัสดี</h3>
                             <p class="small text-secondary mb-4">แตะตัวอักษรหรือคำด้านล่างเพื่อเรียงให้ถูกต้องตามคำศัพท์ต้นฉบับ</p>
                             
-                            <div class="p-3 bg-body-tertiary rounded-4 mb-4 d-flex flex-wrap align-items-center justify-content-center gap-2 border border-2 border-dashed" id="scrambleAnswerBox" style="min-height: 80px;">
+                            <div class="p-3 bg-body rounded-4 mb-4 d-flex flex-wrap align-items-center justify-content-center gap-2 border border-2 border-dashed" id="scrambleAnswerBox" style="min-height: 80px;">
                                 <span class="text-muted small">แตะตัวอักษรด้านล่างเพื่อมาเรียงที่นี่</span>
                             </div>
 
@@ -463,16 +274,34 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                                     <i class="bi bi-arrow-counterclockwise"></i> ล้างคำตอบ
                                 </button>
                                 <button class="btn btn-warning w-50 rounded-pill py-2 fw-bold text-dark shadow-sm" onclick="checkScrambleAnswer()">
-                                    <i class="bi bi-check-lg"></i> ตรวจคำตอบ
+                                    <i class="bi bi-check-lg"></i> ตรวจคำตอบ (+2s)
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- 🎴 เกมจับคู่การ์ดความจำ (Memory Card Flip / Concentration) -->
+                <div id="memoryFlipSection" class="d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopGlobalTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <h4 class="fw-bold m-0 text-info" id="memoryFlipTitle">จับคู่การ์ดความจำ</h4>
+                        <span class="badge bg-info text-dark fs-6 px-3" id="memoryFlipProgress">0 / 0 คู่</span>
+                    </div>
+
+                    <div class="progress mb-3 rounded-pill shadow-sm position-relative overflow-visible" style="height: 14px;">
+                        <div id="memoryFlipProgressBar" class="progress-bar bg-info progress-bar-striped progress-bar-animated rounded-pill" role="progressbar" style="width: 100%;"></div>
+                        <span id="memoryFlipTimerBadge" class="position-absolute top-50 start-50 translate-middle badge bg-dark text-white rounded-pill px-2 py-1 small shadow-sm" style="font-size: 0.75rem;">30.0s</span>
+                    </div>
+
+                    <p class="text-center text-muted small mb-3">แตะพลิกการ์ดคว่ำทีละ 2 ใบเพื่อหาคู่คำศัพท์และความหมายที่ตรงกัน (+2s เมื่อถูก)</p>
+                    
+                    <div class="row g-2" id="memoryFlipGridContainer"></div>
+                </div>
+
                 <div id="speedSection" class="d-none">
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                        <button class="btn btn-light rounded-circle shadow-sm border" onclick="playSound('click'); stopSpeedTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
+                        <button class="btn btn-outline-secondary rounded-circle shadow-sm border" onclick="playSound('click'); stopSpeedTimer(); showSection('librarySection')"><i class="bi bi-x-lg"></i></button>
                         <h4 class="fw-bold m-0 text-danger" id="speedTitle">สายฟ้าแลบ</h4>
                         <span class="badge bg-danger fs-6 px-3" id="speedScoreDisplay">คะแนน: 0</span>
                     </div>
@@ -481,7 +310,7 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
                         <div id="speedProgressBar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
                     </div>
 
-                    <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary">
                         <div class="card-body p-4 text-center">
                             <p class="text-muted mb-2">ข้อที่ <span id="speedCurrentQ">1</span> / <span id="speedTotalQ">0</span></p>
                             <h1 class="display-2 fw-bold text-danger mt-2 mb-1" id="speedQuestionWord">คำศัพท์</h1>
@@ -496,37 +325,95 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
         </div>
     </main>
 
+    <!-- Modals -->
     <div class="modal fade" id="importLanguageModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">เลือกภาษาที่ต้องการ Import</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content rounded-4 border-0 shadow-lg p-3 bg-body text-body">
+                <div class="modal-header border-0 pb-0">
+                    <div>
+                        <span class="badge bg-success-subtle text-success mb-1 fw-bold px-2 py-1">Import Data</span>
+                        <h4 class="modal-title fw-bold m-0">เลือกภาษาที่ต้องการ Import</h4>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
+                <div class="modal-body px-3 py-4">
                     <div class="d-grid gap-3">
-                        <button class="btn btn-outline-danger btn-lg rounded-pill fw-bold py-3" onclick="openImportSection('chinese')" data-bs-dismiss="modal">🇨🇳 ภาษาจีน (Chinese)</button>
-                        <button class="btn btn-outline-primary btn-lg rounded-pill fw-bold py-3" onclick="openImportSection('english')" data-bs-dismiss="modal">🇺🇸 ภาษาอังกฤษ (English)</button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="openImportSection('vietnamese')" data-bs-dismiss="modal">🇻🇳 ภาษาเวียดนาม (Vietnamese)</button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('chinese')" data-bs-dismiss="modal">
+                            <div class="bg-danger text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇨🇳</div>
+                            <div>
+                                <div class="fw-bold">ภาษาจีน (Chinese)</div>
+                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์พร้อมพินอิน</small>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('english')" data-bs-dismiss="modal">
+                            <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇺🇸</div>
+                            <div>
+                                <div class="fw-bold">ภาษาอังกฤษ (English)</div>
+                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์คำอ่านและความหมาย</small>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="openImportSection('vietnamese')" data-bs-dismiss="modal">
+                            <div class="bg-secondary text-white rounded-3 p-2 d-flex align-items-center justify-content-center fs-4" style="width: 45px; height: 45px;">🇻🇳</div>
+                            <div>
+                                <div class="fw-bold">ภาษาเวียดนาม (Vietnamese)</div>
+                                <small class="text-muted fw-normal">นำเข้าชุดคำศัพท์เวียดนาม</small>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 🌟 Popup เลือกโหมดเกม (มีเกมจับคู่การ์ดความจำแล้ว) -->
     <div class="modal fade" id="playModeSelectModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">เลือกโหมดเกม</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content rounded-4 border-0 shadow-lg p-3 bg-body text-body">
+                <div class="modal-header border-0 pb-0">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary mb-1 fw-bold px-2 py-1">เลือกโหมดท้าทาย</span>
+                        <h4 class="modal-title fw-bold m-0">เลือกโหมดเกม</h4>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
+                <div class="modal-body px-3 py-4">
                     <div class="d-grid gap-3">
-                        <button class="btn btn-primary btn-lg rounded-pill fw-bold py-3" onclick="initQuizGame()" data-bs-dismiss="modal"><i class="bi bi-question-square"></i> โหมดตอบคำถาม (30 วินาที)</button>
-                        <button class="btn btn-success btn-lg rounded-pill fw-bold py-3" onclick="initMatchGame()" data-bs-dismiss="modal"><i class="bi bi-grid-3x3-gap"></i> โหมดจับคู่ (30 วินาที)</button>
-                        <button class="btn btn-warning btn-lg rounded-pill fw-bold text-dark py-3" onclick="initScrambleGame()" data-bs-dismiss="modal"><i class="bi bi-shuffle"></i> เกมเรียงประโยค (30 วินาที)</button>
-                        <button class="btn btn-danger btn-lg rounded-pill fw-bold text-white shadow-sm py-3" onclick="initSpeedGame()" data-bs-dismiss="modal"><i class="bi bi-lightning-fill text-warning"></i> โหมดสายฟ้าแลบ (5 วิ/ข้อ)</button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initQuizGame()" data-bs-dismiss="modal">
+                            <div class="bg-primary text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-question-square fs-5"></i></div>
+                            <div>
+                                <div class="fw-bold">โหมดตอบคำถาม</div>
+                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อตอบถูก)</small>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initMatchGame()" data-bs-dismiss="modal">
+                            <div class="bg-success text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-grid-3x3-gap fs-5"></i></div>
+                            <div>
+                                <div class="fw-bold">โหมดจับคู่การ์ด</div>
+                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อจับคู่ถูก)</small>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initScrambleGame()" data-bs-dismiss="modal">
+                            <div class="bg-warning text-dark rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-shuffle fs-5"></i></div>
+                            <div>
+                                <div class="fw-bold">เกมเรียงประโยค</div>
+                                <small class="text-muted fw-normal">เวลา 30s (+2s เมื่อเรียงถูก)</small>
+                            </div>
+                        </button>
+                        <!-- 🎴 ปุ่มเมนูเกมจับคู่การ์ดความจำ -->
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initMemoryFlipGame()" data-bs-dismiss="modal">
+                            <div class="bg-info text-dark rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-collection fs-5"></i></div>
+                            <div>
+                                <div class="fw-bold">จับคู่การ์ดความจำ</div>
+                                <small class="text-muted fw-normal">พลิกการ์ดหาคู่คำศัพท์ (เวลา 30s +2s)</small>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline-secondary border btn-lg rounded-4 fw-bold py-3 px-4 text-start d-flex align-items-center gap-3 shadow-sm mode-card-btn bg-body text-body" onclick="initSpeedGame()" data-bs-dismiss="modal">
+                            <div class="bg-danger text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="bi bi-lightning-fill fs-5"></i></div>
+                            <div>
+                                <div class="fw-bold">โหมดสายฟ้าแลบ</div>
+                                <small class="text-muted fw-normal">จับเวลา 5 วินาทีต่อข้อ</small>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -535,9 +422,9 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
     <div class="modal fade" id="viewDetailsModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-content rounded-4 border-0 shadow bg-body text-body">
                 <div class="modal-header"><h5 class="modal-title fw-bold" id="viewDetailsTitle">รายละเอียดชุดเกม</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-0"><ul class="list-group list-group-flush" id="viewDetailsList"></ul></div>
+                <div class="modal-body p-0"><ul class="list-group list-group-flush bg-body" id="viewDetailsList"></ul></div>
                 <div class="modal-footer"><button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">ปิด</button></div>
             </div>
         </div>
@@ -545,7 +432,7 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
     <div class="modal fade" id="quizResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
                 <div class="modal-body">
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
@@ -565,7 +452,7 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
     <div class="modal fade" id="matchResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
                 <div class="modal-body">
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">ยอดเยี่ยมมาก!</h2>
@@ -585,7 +472,7 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
 
     <div class="modal fade" id="scrambleResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
                 <div class="modal-body">
                     <div class="display-1 mb-2">🎉</div>
                     <h2 class="fw-bold mb-1">สุดยอดไปเลย!</h2>
@@ -603,9 +490,30 @@ Cảm ơn | คัมเอิน | ขอบคุณ"></textarea>
         </div>
     </div>
 
+    <!-- 🎴 ผลลัพธ์เกมจับคู่การ์ดความจำ -->
+    <div class="modal fade" id="memoryFlipResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
+                <div class="modal-body">
+                    <div class="display-1 mb-2">🧠</div>
+                    <h2 class="fw-bold mb-1">ความจำยอดเยี่ยม!</h2>
+                    <p class="text-muted mb-4">คุณเปิดการ์ดจับคู่ครบทุกคู่แล้ว</p>
+                    <div class="bg-body-secondary rounded-4 p-3 mb-4">
+                        <span class="text-muted small d-block">คู่ที่จับคู่สำเร็จ</span>
+                        <h1 class="display-4 fw-bold text-info m-0" id="finalMemoryFlipScoreText">0 / 0</h1>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-info btn-lg rounded-pill fw-bold shadow-sm text-dark py-3" onclick="initMemoryFlipGame()" data-bs-dismiss="modal"><i class="bi bi-arrow-repeat"></i> เล่นอีกครั้ง</button>
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill fw-bold py-3" onclick="showSection('librarySection')" data-bs-dismiss="modal">กลับสู่ Library</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="speedResultModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-4">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-4 bg-body text-body">
                 <div class="modal-body">
                     <div class="display-1 mb-2">⚡</div>
                     <h2 class="fw-bold mb-1">จบเวลาสายฟ้าแลบ!</h2>
