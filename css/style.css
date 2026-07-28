@@ -1,12 +1,12 @@
 /* ==========================================
-   1. ค่าพื้นฐานและโครงสร้างหลัก (Global Styles)
-   ================================---------- */
+   1. Global Styles & Variables (ค่าพื้นฐาน)
+   ========================================== */
 :root {
     --transition-speed: 0.25s;
 }
 
 body {
-    padding-top: 75px; 
+    padding-top: 70px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -15,7 +15,7 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ปรับแต่ง Navbar ด้านบนให้ดูพรีเมียม */
+/* Navbar ด้านบนแบบโปร่งแสงพรีเมียม */
 .navbar {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -36,8 +36,8 @@ body {
 
 
 /* ==========================================
-   2. ปรับแต่ง Dropdown เมนูกรองภาษาและหัวข้อให้สวย อ่านง่าย
-   ================================---------- */
+   2. Dropdown Menu Styles (เมนูกรองภาษาและหัวข้อ)
+   ========================================== */
 .dropdown-menu {
     border-radius: 1rem !important;
     padding: 0.5rem !important;
@@ -52,7 +52,6 @@ body {
     transition: all var(--transition-speed) ease;
 }
 
-/* สีเมื่อเอาเมาส์ชี้ Hover ใน Dropdown (สะอาดตา ตัดกับพื้นหลังชัดเจน) */
 [data-bs-theme="light"] .dropdown-item:hover {
     background-color: #f8f9fa !important;
     color: #0d6efd !important;
@@ -70,8 +69,8 @@ body {
 
 
 /* ==========================================
-   3. ระบบเกมจับคู่ (Matching Grid & Cards)
-   ================================---------- */
+   3. Matching Game & Cards (ระบบเกมจับคู่)
+   ========================================== */
 .match-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -81,7 +80,7 @@ body {
 
 @media (min-width: 768px) {
     .match-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -89,17 +88,17 @@ body {
     background-color: var(--bs-body-bg);
     border: 2px solid var(--bs-border-color);
     border-radius: 16px;
-    min-height: 105px;
+    min-height: 110px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     user-select: none;
-    transition: transform var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
     text-align: center;
     padding: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .match-card:hover {
@@ -108,41 +107,20 @@ body {
 }
 
 .match-card:active {
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
 
 .match-card.selected {
     border-color: var(--bs-primary);
-    background-color: rgba(13, 110, 253, 0.08);
+    background-color: var(--bs-primary-bg-subtle) !important;
     transform: scale(0.97);
-}
-
-/* 🌟 แอนิเมชันตอนจับคู่ถูก (ซูมขยายพร้อมจางหายไป) */
-@keyframes matchPopOut {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.1);
-        background-color: var(--bs-success-bg-subtle);
-        border-color: var(--bs-success);
-    }
-    100% {
-        transform: scale(0);
-        opacity: 0;
-    }
-}
-
-.match-card.matched-animation {
-    animation: matchPopOut 0.4s ease forwards;
-    pointer-events: none;
 }
 
 
 /* ==========================================
-   4. แอนิเมชันเขย่า (Shake Animation สำหรับตอบผิด)
-   ================================---------- */
+   4. Animations (แอนิเมชันต่างๆ)
+   ========================================== */
+/* แอนิเมชันเขย่าเมื่อตอบผิด */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
@@ -153,10 +131,51 @@ body {
     animation: shake 0.3s ease-in-out;
 }
 
+/* แอนิเมชันการ์ดจับคู่ถูกแล้วจางหายไป (Fade out & Scale) */
+@keyframes cardDisappear {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.matched-fade-out {
+    animation: cardDisappear 0.4s ease-in-out forwards;
+    pointer-events: none;
+}
+
 
 /* ==========================================
-   5. Responsive สำหรับหน้าจอมือถือ (Mobile Optimizations)
-   ================================---------- */
+   5. Mode Card & Table (ปุ่มเลือกโหมดและตารางศัพท์)
+   ========================================== */
+.mode-card-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.mode-card-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    border-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .table-light {
+    --bs-table-bg: #212529 !important;
+    --bs-table-color: #f8f9fa !important;
+    color: #f8f9fa !important;
+}
+
+
+/* ==========================================
+   6. Mobile Responsive Optimizations
+   ========================================== */
 @media (max-width: 991px) {
     .navbar-nav { 
         padding-top: 15px; 
@@ -171,21 +190,4 @@ body {
         border-radius: 50rem !important; 
         margin-top: 5px; 
     }
-}
-
-
-.mode-card-btn {
-    transition: all 0.2s ease-in-out;
-}
-.mode-card-btn:hover {
-    transform: translateY(-2px);
-    border-color: var(--bs-primary) !important;
-    background-color: var(--bs-body-bg) !important;
-}
-
-/* 🌟 ทำให้หัวตารางเปลี่ยนเป็นสีเข้มสวยงามใน Dark Mode */
-[data-bs-theme="dark"] .table-light {
-    --bs-table-bg: #212529 !important;
-    --bs-table-color: #f8f9fa !important;
-    color: #f8f9fa !important;
 }
