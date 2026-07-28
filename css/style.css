@@ -172,3 +172,20 @@ body {
         margin-top: 5px; 
     }
 }
+
+
+.mode-card-btn {
+    transition: all 0.2s ease-in-out;
+}
+.mode-card-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-body-bg) !important;
+}
+
+/* 🌟 ทำให้หัวตารางเปลี่ยนเป็นสีเข้มสวยงามใน Dark Mode */
+[data-bs-theme="dark"] .table-light {
+    --bs-table-bg: #212529 !important;
+    --bs-table-color: #f8f9fa !important;
+    color: #f8f9fa !important;
+}
