@@ -14,7 +14,7 @@ let gameSets = JSON.parse(localStorage.getItem('gameSets')) || [
     },
     {
         id: 2,
-        title: '🇺🇸 คำศัพท์อังกฤษ หมวดพื้นฐาน',
+        title: '🇺🇸 ภาษาอังกฤษ หมวดพื้นฐาน',
         language: 'english',
         words: [
             { chinese: 'Apple', pinyin: 'แอพเพิล', thaiRead: 'แอพเพิล', meaning: 'แอปเปิ้ล' },
@@ -24,7 +24,7 @@ let gameSets = JSON.parse(localStorage.getItem('gameSets')) || [
     },
     {
         id: 3,
-        title: '🇻🇳 คำศัพท์เวียดนาม หมวดพื้นฐาน',
+        title: '🇻🇳 ภาษาเวียดนาม หมวดพื้นฐาน',
         language: 'vietnamese',
         words: [
             { chinese: 'Xin chào', pinyin: 'ซินจ่าว', thaiRead: 'ซินจ่าว', meaning: 'สวัสดี' },
@@ -62,13 +62,13 @@ let scrambleScore = 0;
 let currentScrambleLetters = [];
 let userSelectedLetters = [];
 
-// 🎴 ตัวแปรสำหรับเกมจับคู่การ์ดความจำ (Memory Card Flip)
+// 🎴 ตัวแปรสำหรับเกมจับคู่การ์ดความจำ (ตั้งเวลา 60 วินาที)
 let memoryFlipCards = [];
 let firstFlipCard = null;
 let memoryFlipMatchedCount = 0;
 let memoryFlipTotalPairs = 0;
 let canFlip = true;
-let customMaxTime = 45;
+let memoryMaxTime = 60;
 
 let speedQuestions = [];
 let speedCurrentIndex = 0;
@@ -77,7 +77,7 @@ let speedTimer = null;
 let timeLeft = 5;
 const maxTimePerQuestion = 5;
 
-// ⏱️ ตัวแปรควบคุมเวลาแบบไดนามิก
+// ⏱️ ตัวแปรควบคุมเวลาแบบไดนามิกทั่วไป
 let globalTimer = null;
 let globalTimeLeft = 30;
 
@@ -233,10 +233,12 @@ document.addEventListener('DOMContentLoaded', () => {
 let activeTimerBarId = '';
 let activeTimerBadgeId = '';
 let activeTimerTimesUpCallback = null;
+let activeMaxTime = 30;
 
-function startGlobalTimer(callbackWhenTimesUp, progressBarId, badgeId) {
+function startGlobalTimer(callbackWhenTimesUp, progressBarId, badgeId, maxSeconds = 30) {
     stopGlobalTimer();
-    globalTimeLeft = 30;
+    globalTimeLeft = maxSeconds;
+    activeMaxTime = maxSeconds;
     activeTimerBarId = progressBarId;
     activeTimerBadgeId = badgeId;
     activeTimerTimesUpCallback = callbackWhenTimesUp;
@@ -258,65 +260,10 @@ function startGlobalTimer(callbackWhenTimesUp, progressBarId, badgeId) {
 
 function addBonusTime(seconds = 2) {
     globalTimeLeft += seconds;
-    if (globalTimeLeft > 30) {
-        globalTimeLeft = 30;
+    if (globalTimeLeft > activeMaxTime) {
+        globalTimeLeft = activeMaxTime;
     }
     updateGlobalProgressBar();
-}
-
-// ⏱️ ระบบจับเวลาพิเศษสำหรับเกมจับคู่การ์ดความจำ (45s และโบนัส +3s)
-function startCustomGlobalTimer(seconds, callbackWhenTimesUp, progressBarId, badgeId) {
-    stopGlobalTimer();
-    globalTimeLeft = seconds;
-    customMaxTime = seconds;
-    activeTimerBarId = progressBarId;
-    activeTimerBadgeId = badgeId;
-    activeTimerTimesUpCallback = callbackWhenTimesUp;
-
-    updateCustomGlobalProgressBar();
-
-    globalTimer = setInterval(() => {
-        globalTimeLeft -= 0.1;
-        if (globalTimeLeft < 0) globalTimeLeft = 0;
-        updateCustomGlobalProgressBar();
-
-        if (globalTimeLeft <= 0) {
-            stopGlobalTimer();
-            playSound('wrong');
-            if (activeTimerTimesUpCallback) activeTimerTimesUpCallback();
-        }
-    }, 100);
-}
-
-function addMemoryBonusTime(seconds = 3) {
-    globalTimeLeft += seconds;
-    if (globalTimeLeft > customMaxTime) {
-        globalTimeLeft = customMaxTime;
-    }
-    updateCustomGlobalProgressBar();
-}
-
-function updateCustomGlobalProgressBar() {
-    if (!activeTimerBarId) return;
-    const bar = document.getElementById(activeTimerBarId);
-    const badge = document.getElementById(activeTimerBadgeId);
-    if (!bar) return;
-
-    let percentage = (globalTimeLeft / customMaxTime) * 100;
-    if (percentage > 100) percentage = 100;
-    bar.style.width = `${percentage}%`;
-
-    if (badge) {
-        badge.innerText = `${globalTimeLeft.toFixed(1)}s`;
-    }
-
-    if (percentage > 50) {
-        bar.className = "progress-bar bg-info progress-bar-striped progress-bar-animated rounded-pill";
-    } else if (percentage > 25) {
-        bar.className = "progress-bar bg-warning progress-bar-striped progress-bar-animated rounded-pill";
-    } else {
-        bar.className = "progress-bar bg-danger progress-bar-striped progress-bar-animated rounded-pill";
-    }
 }
 
 function stopGlobalTimer() {
@@ -332,7 +279,7 @@ function updateGlobalProgressBar() {
     const badge = document.getElementById(activeTimerBadgeId);
     if (!bar) return;
 
-    let percentage = (globalTimeLeft / 30) * 100;
+    let percentage = (globalTimeLeft / activeMaxTime) * 100;
     if (percentage > 100) percentage = 100;
     bar.style.width = `${percentage}%`;
 
@@ -341,7 +288,7 @@ function updateGlobalProgressBar() {
     }
 
     if (percentage > 50) {
-        bar.className = "progress-bar bg-primary progress-bar-striped progress-bar-animated rounded-pill";
+        bar.className = "progress-bar bg-info progress-bar-striped progress-bar-animated rounded-pill";
     } else if (percentage > 25) {
         bar.className = "progress-bar bg-warning progress-bar-striped progress-bar-animated rounded-pill";
     } else {
@@ -756,7 +703,7 @@ function initQuizGame() {
 
     startGlobalTimer(() => {
         endQuizGame();
-    }, 'quizProgressBar', 'quizTimerBadge');
+    }, 'quizProgressBar', 'quizTimerBadge', 30);
 }
 
 function loadQuizQuestion() {
@@ -869,7 +816,7 @@ function initMatchGame() {
 
     startGlobalTimer(() => {
         endMatchGameOnTimeout();
-    }, 'matchProgressBar', 'matchTimerBadge');
+    }, 'matchProgressBar', 'matchTimerBadge', 30);
 }
 
 function renderMatchGrid() {
@@ -968,7 +915,7 @@ function initScrambleGame() {
 
     startGlobalTimer(() => {
         endScrambleGame();
-    }, 'scrambleProgressBar', 'scrambleTimerBadge');
+    }, 'scrambleProgressBar', 'scrambleTimerBadge', 30);
 }
 
 function loadScrambleQuestion() {
@@ -1096,19 +1043,19 @@ function endScrambleGame() {
     triggerConfetti();
 }
 
-// 🎴 เกมจับคู่การ์ดความจำ (Memory Card Flip Engine - เปิดเฉลยการ์ด 8 วินาทีก่อนเริ่มเกม)
+// 🎴 เกมจับคู่การ์ดความจำ (เริ่มต้นโชว์เฉลย 10 วินาที จากนั้นเริ่มจับเวลาจริง 60 วินาที + บวกเพิ่ม +3s ทุกคู่ที่ถูก)
 function initMemoryFlipGame() {
     playSound('click');
     if (!activeGameSet) return;
     memoryFlipMatchedCount = 0;
-    canFlip = false; // ล็อคการกดระหว่างโชว์เฉลย 8 วินาที
+    canFlip = false; 
     firstFlipCard = null;
     
     document.getElementById('memoryFlipTitle').innerText = activeGameSet.title;
     showSection('memoryFlipSection');
 
     memoryFlipTotalPairs = activeGameSet.words.length;
-    document.getElementById('memoryFlipProgress').innerText = `กำลังจำตำแหน่งการ์ด (8s)...`;
+    document.getElementById('memoryFlipProgress').innerText = `กำลังจำตำแหน่งการ์ด (10s)...`;
 
     memoryFlipCards = [];
     activeGameSet.words.forEach((word, idx) => {
@@ -1119,8 +1066,9 @@ function initMemoryFlipGame() {
             pairId: idx,
             type: 'word',
             displayHtml: `<span class="fw-bold fs-5 text-primary">${word.chinese}</span><br><small class="text-secondary">${subText}</small>`,
-            isFlipped: true, // เริ่มต้นเปิดหน้าการ์ดเพื่อให้ผู้เล่นเห็นเฉลย
-            isMatched: false
+            isFlipped: true,
+            isMatched: false,
+            isDisappearing: false
         });
 
         memoryFlipCards.push({
@@ -1128,37 +1076,40 @@ function initMemoryFlipGame() {
             pairId: idx,
             type: 'meaning',
             displayHtml: `<span class="fw-bold text-success fs-6">ความหมาย:<br>${word.meaning}</span>`,
-            isFlipped: true, // เริ่มต้นเปิดหน้าการ์ดเพื่อให้ผู้เล่นเห็นเฉลย
-            isMatched: false
+            isFlipped: true,
+            isMatched: false,
+            isDisappearing: false
         });
     });
 
     memoryFlipCards = shuffleArray(memoryFlipCards);
     renderMemoryFlipGrid();
 
-    // แสดงการ์ดเฉลยค้างไว้ 8 วินาที จากนั้นคว่ำลงแล้วเริ่มจับเวลาเกมจริง
+    // โชว์เฉลยค้างไว้ 10 วินาทีแรก แล้วเริ่มจับเวลาจริง 60 วินาที
     setTimeout(() => {
         memoryFlipCards.forEach(card => card.isFlipped = false);
-        canFlip = true; // ปลดล็อคให้ผู้เล่นกดเล่นได้
+        canFlip = true;
         document.getElementById('memoryFlipProgress').innerText = `0 / ${memoryFlipTotalPairs} คู่`;
+        document.getElementById('memoryFlipInstruction').innerText = `พลิกการ์ดหาคู่คำศัพท์ (+3s เมื่อถูก)`;
         renderMemoryFlipGrid();
 
-        startCustomGlobalTimer(45, () => {
+        startGlobalTimer(() => {
             endMemoryFlipGameOnTimeout();
-        }, 'memoryFlipProgressBar', 'memoryFlipTimerBadge');
-    }, 8000);
+        }, 'memoryFlipProgressBar', 'memoryFlipTimerBadge', 60);
+    }, 10000);
 }
 
 function renderMemoryFlipGrid() {
     const grid = document.getElementById('memoryFlipGridContainer');
+
     grid.innerHTML = memoryFlipCards.map((card, index) => {
         if (card.isMatched) {
-            return `<div class="col-6 col-md-3 mb-2"><div class="card border-0 bg-transparent py-4 text-center opacity-25"><span>✔ จับคู่แล้ว</span></div></div>`;
+            return '';
         }
         if (card.isFlipped) {
             return `
                 <div class="col-6 col-md-3 mb-2">
-                    <div class="card shadow-sm border border-primary border-2 rounded-4 text-center p-3 d-flex align-items-center justify-content-center bg-body" style="min-height: 110px;">
+                    <div class="card shadow-sm border border-primary border-2 rounded-4 text-center p-3 d-flex align-items-center justify-content-center bg-body ${card.isDisappearing ? 'matched-fade-out' : ''}" style="min-height: 110px;">
                         ${card.displayHtml}
                     </div>
                 </div>
@@ -1166,7 +1117,7 @@ function renderMemoryFlipGrid() {
         } else {
             return `
                 <div class="col-6 col-md-3 mb-2">
-                    <div class="card shadow-sm border rounded-4 text-center p-3 d-flex align-items-center justify-content-center bg-body-secondary text-muted fw-bold" style="min-height: 110px; cursor: pointer;" onclick="flipMemoryCard(${index})">
+                    <div class="card shadow-sm border rounded-4 text-center p-3 d-flex align-items-center justify-content-center bg-body-secondary text-muted fw-bold ${card.isDisappearing ? 'matched-fade-out' : ''}" style="min-height: 110px; cursor: pointer;" onclick="flipMemoryCard(${index})">
                         <i class="bi bi-question-circle fs-3 text-secondary"></i><br><small>แตะเพื่อเปิด</small>
                     </div>
                 </div>
@@ -1190,27 +1141,37 @@ function flipMemoryCard(index) {
         canFlip = false;
         if (firstFlipCard.pairId === clickedCard.pairId && firstFlipCard.type !== clickedCard.type) {
             playSound('correct');
-            addMemoryBonusTime(3); 
+            addBonusTime(3); // 🌟 บวกเพิ่ม 3 วินาที เมื่อจับคู่ถูกต้อง
             
-            memoryFlipCards[firstFlipCard.index].isMatched = true;
-            memoryFlipCards[index].isMatched = true;
-            memoryFlipMatchedCount++;
-            
-            document.getElementById('memoryFlipProgress').innerText = `${memoryFlipMatchedCount} / ${memoryFlipTotalPairs} คู่`;
-            firstFlipCard = null;
-            canFlip = true;
+            memoryFlipCards[firstFlipCard.index].isDisappearing = true;
+            memoryFlipCards[index].isDisappearing = true;
             renderMemoryFlipGrid();
 
-            if (memoryFlipMatchedCount === memoryFlipTotalPairs) {
-                stopGlobalTimer();
-                setTimeout(() => {
-                    document.getElementById('finalMemoryFlipScoreText').innerText = `${memoryFlipTotalPairs} / ${memoryFlipTotalPairs} คู่`;
-                    savePlayHistory(activeGameSet.title, 'จับคู่การ์ดความจำ', `${memoryFlipTotalPairs}/${memoryFlipTotalPairs}`);
-                    const modal = new bootstrap.Modal(document.getElementById('memoryFlipResultModal'));
-                    modal.show();
-                    triggerConfetti();
-                }, 400);
-            }
+            let firstIdx = firstFlipCard.index;
+            let secondIdx = index;
+            firstFlipCard = null;
+
+            setTimeout(() => {
+                memoryFlipCards[firstIdx].isMatched = true;
+                memoryFlipCards[secondIdx].isMatched = true;
+                memoryFlipMatchedCount++;
+                
+                document.getElementById('memoryFlipProgress').innerText = `${memoryFlipMatchedCount} / ${memoryFlipTotalPairs} คู่`;
+                canFlip = true;
+                renderMemoryFlipGrid();
+
+                if (memoryFlipMatchedCount === memoryFlipTotalPairs) {
+                    stopGlobalTimer();
+                    setTimeout(() => {
+                        document.getElementById('finalMemoryFlipScoreText').innerText = `${memoryFlipTotalPairs} / ${memoryFlipTotalPairs} คู่`;
+                        savePlayHistory(activeGameSet.title, 'จับคู่การ์ดความจำ', `${memoryFlipTotalPairs}/${memoryFlipTotalPairs}`);
+                        const modal = new bootstrap.Modal(document.getElementById('memoryFlipResultModal'));
+                        modal.show();
+                        triggerConfetti();
+                    }, 400);
+                }
+            }, 400);
+
         } else {
             playSound('wrong');
             let firstIdx = firstFlipCard.index;
@@ -1351,6 +1312,8 @@ function highlightCorrectSpeedAnswer(correct) {
         }
     });
 }
+
+let speedTimerBadgeId = ''; // สำรองไว้กันพลาดยามเรียกใช้
 
 function endSpeedGame() {
     stopSpeedTimer();
